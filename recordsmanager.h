@@ -15,6 +15,7 @@ public:
     explicit RecordsManager(QObject *parent = 0);
     ~RecordsManager();
 signals:
+    void recordFinished(RecordInfo* record);
 
 public slots:
     void finishedEx(QVector<RecordInfo*> records);

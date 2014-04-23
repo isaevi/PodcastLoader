@@ -47,6 +47,7 @@
 #include <QBuffer>
 #include <QXmlStreamReader>
 #include <QUrl>
+#include <QHash>
 
 #include "recordinfo.h"
 #include "feeddata.h"
@@ -67,12 +68,14 @@ public slots:
     void finishedEx(QVector<RecordInfo*> records);
     void itemActivated(QTreeWidgetItem * item);
     void error(QNetworkReply::NetworkError);
+    void recordFinished(RecordInfo* record);
 
 private:
     void get();
     QTreeWidget *treeWidget;
     QPushButton *fetchButton;
-
+    QHash<RecordInfo*, int> _hash;
+    int _recordIndex = 0;
 };
 
 #endif

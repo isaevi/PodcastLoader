@@ -10,7 +10,7 @@ RecordsManager::RecordsManager(QObject *parent) :
     {
         Downloader* loader = new Downloader(this);
         _loaders.push_back(loader);
-        connect(loader, SIGNAL(downloaded(RecordInfo*, Downloader*)), this, SLOT(downloaded(RecordInfo*, Downloader*)));
+        connect(loader, SIGNAL(downloaded(RecordInfo*)), this, SLOT(downloaded(RecordInfo*)));
     }
     _stub.setBusy();
 }
@@ -41,6 +41,7 @@ void RecordsManager::downloaded(RecordInfo *rec)
 
     _queuedRecords.removeAt(index);
     _finishedRecords.append(rec);
+    emit recordFinished(rec);
     if(_records.size() > 0)
         hadMoreRecords();
 }
