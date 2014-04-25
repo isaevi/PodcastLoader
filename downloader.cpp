@@ -36,9 +36,9 @@ bool Downloader::get(RecordInfo* rec)
     }
     _reply = qApp->networkAccessMenager()->get(request);
     connect(_reply, SIGNAL(finished()), SLOT(finished()));
+    connect(_reply, SIGNAL(downloadProgress(qint64,qint64)), SLOT(downloadProgress(qint64,qint64)));
     return true;
 }
-
 
 void Downloader::PrepareDirectory(QString title)
 {
@@ -69,4 +69,10 @@ void Downloader::finished()
     _reply->deleteLater();
     _reply = nullptr;
     emit downloaded(_rec);
+}
+
+
+void Downloader::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+{
+    emit downloadProgress(_rec, bytesReceived, bytesTotal);
 }

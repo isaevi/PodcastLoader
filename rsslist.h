@@ -69,6 +69,7 @@ public slots:
     void itemActivated(QTreeWidgetItem * item);
     void error(QNetworkReply::NetworkError);
     void recordFinished(RecordInfo* record);
+    void downloadProgress(RecordInfo* record, qint64 bytesReceived, qint64 bytesTotal);
 
 private:
     void get();

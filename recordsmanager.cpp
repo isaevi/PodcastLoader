@@ -10,7 +10,8 @@ RecordsManager::RecordsManager(QObject *parent) :
     {
         Downloader* loader = new Downloader(this);
         _loaders.push_back(loader);
-        connect(loader, SIGNAL(downloaded(RecordInfo*)), this, SLOT(downloaded(RecordInfo*)));
+        connect(loader, SIGNAL(downloaded(RecordInfo*)), SLOT(downloaded(RecordInfo*)));
+        connect(loader, SIGNAL(downloadProgress(RecordInfo*,qint64,qint64)), SIGNAL(downloadProgress(RecordInfo*,qint64,qint64)));
     }
     _stub.setBusy();
 }

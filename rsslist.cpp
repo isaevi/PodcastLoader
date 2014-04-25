@@ -20,7 +20,7 @@ RSSListing::RSSListing(QWidget *parent)
     connect(treeWidget, SIGNAL(itemActivated(QTreeWidgetItem*,int)),
             this, SLOT(itemActivated(QTreeWidgetItem*)));
     QStringList headerLabels;
-    headerLabels << tr("Title") << tr("Link") <<tr("Date") << tr("Finished");
+    headerLabels << tr("Title") << tr("Link") <<tr("Date") << tr("Finished") << tr("Progress");
     treeWidget->setHeaderLabels(headerLabels);
     treeWidget->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
@@ -52,6 +52,7 @@ void RSSListing::get()
 
     RecordsManager* manager = new RecordsManager(this);
     connect(manager, SIGNAL(recordFinished(RecordInfo*)), SLOT(recordFinished(RecordInfo*)));
+    connect(manager, SIGNAL(downloadProgress(RecordInfo*,qint64,qint64)), SLOT(downloadProgress(RecordInfo*,qint64,qint64)));
 
     for(auto feed : feeds){
         RssFetcher* fetcher = new RssFetcher(feed);
@@ -70,6 +71,7 @@ void RSSListing::finishedEx(QVector<RecordInfo*> records)
         item->setText(1, rec->getUrl());
         item->setText(2, rec->getDate().toString());
         item->setText(3, "Available");
+        item->setText(4, "0");
         ++_recordIndex;
         item->setData(0, Qt::UserRole, _recordIndex);
         _hash.insert(rec, _recordIndex);
@@ -89,7 +91,38 @@ void RSSListing::recordFinished(RecordInfo* record)
     while(*it)
     {
         if(index == (*it)->data(0, Qt::UserRole))
+        {
             (*it)->setText(3, "Finished");
+            return;
+        }
+        ++it;
+    }
+}
+
+void RSSListing::downloadProgress(RecordInfo* record, qint64 bytesReceived, qint64 bytesTotal)
+{
+    if(bytesTotal == 0)
+        return;
+    if(!_hash.contains(record))
+    {
+        qWarning() << "Coulnd't find in hash the record :" << record->getTitle();
+        return;
+    }
+    int index = _hash[record];
+    QTreeWidgetItemIterator it(treeWidget);
+    while(*it)
+    {
+        if(index == (*it)->data(0, Qt::UserRole))
+        {
+            if(bytesTotal == -1)
+               (*it)->setText(4, "Unknown");
+            else
+            {
+                qint64 progress = 100 * bytesReceived/bytesTotal;
+                (*it)->setText(4, QString::number(progress));
+            }
+            return;
+        }
         ++it;
     }
 }

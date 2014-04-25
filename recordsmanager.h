@@ -16,6 +16,7 @@ public:
     ~RecordsManager();
 signals:
     void recordFinished(RecordInfo* record);
+    void downloadProgress(RecordInfo* rec, qint64 bytesReceived, qint64 bytesTotal);
 
 public slots:
     void finishedEx(QVector<RecordInfo*> records);

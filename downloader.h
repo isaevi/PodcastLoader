@@ -21,9 +21,11 @@ public:
 signals:
     void downloaded(RecordInfo* rec);
     void errorHappen();
+    void downloadProgress(RecordInfo* _rec, qint64 bytesReceived, qint64 bytesTotal);
 
 private slots:
     void finished();
+    void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
 private:
     RecordInfo* _rec;
