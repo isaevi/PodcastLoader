@@ -88,17 +88,6 @@ void Configuration::save()
         doc.appendChild(node);
     }
 
-//    QDomElement root = doc.createElement("doc");
-//    QDomElement quote = doc.createElement("quote");
-//    QDomElement translation = doc.createElement("translation");
-//    QDomText quoteText = doc.createTextNode("Errare humanum est");
-//    QDomText translationText = doc.createTextNode("To err is human");
-
-//    doc.appendChild(root);
-//    root.appendChild(quote);
-//    root.appendChild(translation);
-//    quote.appendChild(quoteText);
-//    translation.appendChild(translationText);
     QDomProcessingInstruction pi = doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ");
     doc.insertBefore(pi, QDomNode());
 
