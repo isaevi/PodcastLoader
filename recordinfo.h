@@ -20,7 +20,7 @@ public:
     const FeedData& getFeed () const {return _feed;}
     void setTitle(const QString& title) {_title = title;}
     void setUrl(const QString& url) {_url = url;}
-    void setDate(const QString& date);
+    void setDate(QString date);
     void setFeed(const FeedData& feed) {_feed = feed;}
     bool operator ==(const RecordInfo& other);
 };
