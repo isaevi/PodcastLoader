@@ -2,6 +2,7 @@
 #define DOWNLOADER_H
 
 #include <QObject>
+#include <QNetworkReply>
 #include "recordinfo.h"
 
 class QString;
