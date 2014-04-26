@@ -22,7 +22,7 @@ void RssFetcher::Fetch(const QUrl &url)
         _currentReply->deleteLater();
     }
     _currentReply = qApp->networkAccessMenager()->get(request);
-    connect(_currentReply, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    connect(_currentReply, SIGNAL(finished()), SLOT(finished()));
     connect(_currentReply, SIGNAL(metaDataChanged()), this, SLOT(metaDataChanged()));
     connect(_currentReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
 }
@@ -35,7 +35,7 @@ void RssFetcher::metaDataChanged()
     }
 }
 
-void RssFetcher::readyRead()
+void RssFetcher::finished()
 {
     int statusCode = _currentReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     if (statusCode >= 200 && statusCode < 300) {
