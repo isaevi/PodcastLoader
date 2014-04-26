@@ -6,7 +6,8 @@ HEADERS += \
     feeddata.h \
     rssapplication.h \
     recordsmanager.h \
-    rsslist.h
+    rsslist.h \
+    configuration.h
 SOURCES += main.cpp \
     recordinfo.cpp \
     parser.cpp \
@@ -15,7 +16,8 @@ SOURCES += main.cpp \
     feeddata.cpp \
     rssapplication.cpp \
     recordsmanager.cpp \
-    rsslist.cpp
+    rsslist.cpp \
+    configuration.cpp
 QT += network xml widgets xmlpatterns
 QMAKE_CXXFLAGS = -std=c++11
 
