@@ -26,6 +26,7 @@ signals:
 private slots:
     void finished();
     void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+    void error(QNetworkReply::NetworkError error);
 
 private:
     RecordInfo* _rec;

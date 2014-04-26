@@ -37,6 +37,8 @@ bool Downloader::get(RecordInfo* rec)
     _reply = qApp->networkAccessMenager()->get(request);
     connect(_reply, SIGNAL(finished()), SLOT(finished()));
     connect(_reply, SIGNAL(downloadProgress(qint64,qint64)), SLOT(downloadProgress(qint64,qint64)));
+
+    connect(_reply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(error(QNetworkReply::NetworkError)));
     return true;
 }
 
@@ -65,7 +67,6 @@ void Downloader::finished()
     file.close();
 
     _isBusy = false;
-    //emit a signal
     _reply->deleteLater();
     _reply = nullptr;
     emit downloaded(_rec);
@@ -75,4 +76,11 @@ void Downloader::finished()
 void Downloader::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
     emit downloadProgress(_rec, bytesReceived, bytesTotal);
+}
+
+void Downloader::error(QNetworkReply::NetworkError error)
+{
+    qDebug() << "Error #" << error << "\t" << _rec->getTitle();
+    _reply->deleteLater();
+    _reply = nullptr;
 }
