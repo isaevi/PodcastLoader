@@ -45,6 +45,10 @@ void RssFetcher::finished()
             rec->setFeed(_feed);
         emit finished(records);
     }
+    else
+        emit canceled();
+    _currentReply->deleteLater();
+    _currentReply = nullptr;
 }
 
 void RssFetcher::error(QNetworkReply::NetworkError)
