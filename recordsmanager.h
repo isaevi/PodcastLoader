@@ -33,7 +33,9 @@ private:
     QVector<RecordInfo*> _queuedRecords;
     QVector<Downloader*> _loaders;
     Downloader _stub;
-    const int PoolSize = 10;
+    const int PoolSize = 6;
+    //QNetworkAccessManager : Currently, for the HTTP protocol on desktop platforms,
+    //6 requests are executed in parallel for one host/port combination.
 };
 
 #endif // RECORDSMANAGER_H
