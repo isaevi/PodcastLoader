@@ -8,7 +8,7 @@
 #include "feeddata.h"
 #include "rssapplication.h"
 
-RssFetcher::RssFetcher(const FeedData feed) : QObject()
+RssFetcher::RssFetcher(FeedData *feed) : QObject()
 {
     _feed = feed;
     _currentReply = nullptr;

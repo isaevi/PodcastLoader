@@ -16,7 +16,7 @@ class RssFetcher : public QObject
 {
     Q_OBJECT
 public:
-    RssFetcher(const FeedData feed);
+    RssFetcher(FeedData *feed);
     void Fetch(const QUrl& url);
 
 public slots:
@@ -30,7 +30,7 @@ signals:
 
 private:
     QNetworkReply *_currentReply;
-    FeedData _feed;
+    FeedData* _feed;
 };
 
 #endif // RSSFETCHER_H

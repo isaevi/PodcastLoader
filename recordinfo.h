@@ -10,18 +10,21 @@ class RecordInfo
 {
 QString _title;
 QString _url;
+QString _guid;
 QDateTime _date;
-FeedData _feed;
+FeedData* _feed;
 public:
     RecordInfo();
     QString getTitle() const {return _title;}
     QString getUrl() const {return _url;}
+    QString getGuid() const {return _guid;}
     QDateTime getDate() const {return _date;}
-    const FeedData& getFeed () const {return _feed;}
+    FeedData* getFeed () {return _feed;}
     void setTitle(const QString& title) {_title = title;}
     void setUrl(const QString& url) {_url = url;}
+    void setGuid(const QString& guid){_guid = guid;}
     void setDate(QString date);
-    void setFeed(const FeedData& feed) {_feed = feed;}
+    void setFeed(FeedData* feed) {_feed = feed;}
     bool operator ==(const RecordInfo& other);
 };
 

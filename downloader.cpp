@@ -53,7 +53,7 @@ void Downloader::finished()
 {
     QByteArray downloadedData = _reply->readAll();
     QString title = _rec->getTitle().replace(QRegExp("[/:*?\"<>| ,]"), "_");
-    title = _rec->getFeed().getFeedDir() + "\\" + _rec->getFeed().getFeedPrefix() + "_" + _rec->getDate().toString("yyMMdd") + "_" + title + ".mp3";
+    title = _rec->getFeed()->getFeedDir() + "\\" + _rec->getFeed()->getFeedPrefix() + "_" + _rec->getDate().toString("yyMMdd") + "_" + title + ".mp3";
     PrepareDirectory(title);
     QFile file(title);
     if(!file.open(QIODevice::WriteOnly))
