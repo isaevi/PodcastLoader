@@ -22,7 +22,7 @@ RSSListing::RSSListing(QWidget *parent)
     QStringList headerLabels;
     headerLabels << tr("Title") << tr("Link") <<tr("Date") << tr("Finished") << tr("Progress");
     treeWidget->setHeaderLabels(headerLabels);
-    treeWidget->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    treeWidget->header()->setSectionResizeMode(QHeaderView::Stretch);
 
     connect(fetchButton, SIGNAL(clicked()), this, SLOT(fetch()));
 
