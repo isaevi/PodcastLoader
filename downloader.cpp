@@ -69,6 +69,7 @@ void Downloader::finished()
     _isBusy = false;
     _reply->deleteLater();
     _reply = nullptr;
+    _rec->getFeed()->addProcessedGuid(_rec->getGuid());
     emit downloaded(_rec);
 }
 

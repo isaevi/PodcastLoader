@@ -51,6 +51,7 @@ QVector<RecordInfo*> Parser::parseXml(QByteArray& data)
             rec->setTitle(title.trimmed());
             rec->setUrl(link.trimmed());
             rec->setDate(date.trimmed());
+            rec->setGuid(guid.trimmed());
             records.push_back(rec);
         }
         item = out.next();
