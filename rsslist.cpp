@@ -52,6 +52,7 @@ RSSListing::RSSListing(QWidget *parent)
 void RSSListing::closeEvent(QCloseEvent *event)
  {
     config.save();
+    delete qApp->qmlEngine();
     event->accept();
  }
 
