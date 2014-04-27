@@ -5,13 +5,7 @@
 #include "configuration.h"
 #include "feeddata.h"
 
-const QString dirAttr = "dir";
-const QString urlAttr = "url";
-const QString prefixAttr = "prefix";
-const QString feedNode = "Feed";
-const QString guidNode = "Guid";
-
-Configuration::Configuration() : _feedCount(0)
+Configuration::Configuration()
 {
 }
 
@@ -23,8 +17,8 @@ FeedData* Configuration::feedAt(const int index)
 
 void Configuration::load()
 {
-    QFile file("config.xml");
-    if(!file.open(QIODevice::ReadOnly))
+    QFile file(configName);
+    if(!file.open(QFile::ReadOnly | QFile::Text) || !file.exists())
     {
         qDebug() << "Can't open configuration.";
         return;
@@ -50,27 +44,34 @@ void Configuration::load()
         QDomNode node = element.firstChild();
         while(!node.isNull())
         {
-            value = node.nodeValue();
-            feed->addProcessedGuid(value);
+            if(node.hasChildNodes())
+            {
+                value = node.firstChild().nodeValue();
+                if(!value.isEmpty())
+                    feed->addProcessedGuid(value);
+            }
             node = node.nextSibling();
         }
         _feeds.append(feed);
         element = element.nextSiblingElement(feedNode);
     }
+    file.close();
 }
 
 void Configuration::save()
 {
-    QFile file("config_new.xml");
+    QFile file(tempoparyConfigName);
     if(!file.open(QIODevice::WriteOnly))
     {
-        qDebug() << "Can't open configuration for writing.";
+        qDebug() << "Couldn't open configuration for writing.";
         return;
     }
 
     const int Indent = 4;
 
     QDomDocument doc;
+    QDomElement root = doc.createElement(feedsConfiguration);
+    doc.appendChild(root);
     for(auto it = _feeds.begin(); it != _feeds.end(); ++it )
     {
         QDomElement node = doc.createElement(feedNode);
@@ -82,10 +83,11 @@ void Configuration::save()
         for(auto guid : guids)
         {
             QDomElement list = doc.createElement(guidNode);
-            list.setNodeValue(guid);
+            QDomText text = doc.createTextNode(guid);
+            list.appendChild(text);
             node.appendChild(list);
         }
-        doc.appendChild(node);
+        root.appendChild(node);
     }
 
     QDomProcessingInstruction pi = doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ");
@@ -93,6 +95,14 @@ void Configuration::save()
 
     QTextStream out(&file);
     doc.save(out, Indent);
+    QFile oldConfig(configName);
+    if(!oldConfig.remove())
+    {
+        qDebug() << "Couldn't remove old configuration.";
+        return;
+    }
+    if(!file.rename(configName))
+        qDebug() << "Couldn't rename configuration.";
 }
 
 

@@ -50,6 +50,7 @@
 #include <QHash>
 
 #include "recordinfo.h"
+#include "configuration.h"
 #include "feeddata.h"
 
 class QTreeWidget;
@@ -71,12 +72,16 @@ public slots:
     void recordFinished(RecordInfo* record);
     void downloadProgress(RecordInfo* record, qint64 bytesReceived, qint64 bytesTotal);
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private:
     void get();
     QTreeWidget *treeWidget;
     QPushButton *fetchButton;
     QHash<RecordInfo*, int> _hash;
     int _recordIndex = 0;
+    Configuration config;
 };
 
 #endif

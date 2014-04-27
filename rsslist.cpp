@@ -38,27 +38,30 @@ RSSListing::RSSListing(QWidget *parent)
 
     setWindowTitle(tr("RSS listing example"));
     resize(640,480);
+
+    config.load();
 }
+
+void RSSListing::closeEvent(QCloseEvent *event)
+ {
+    config.save();
+    event->accept();
+ }
 
 void RSSListing::get()
 {
-    QVector<FeedData> feeds;
-    feeds.push_back(FeedData("http://learningenglish.voanews.com/podcast/?count=1&zoneId=3521", "C:\\Podcast\\aii", "aii"));
-    feeds.push_back(FeedData("http://learningenglish.voanews.com/podcast/?count=1&zoneId=986", "C:\\Podcast\\am", "am"));
-    feeds.push_back(FeedData("http://learningenglish.voanews.com/podcast/?count=1&zoneId=1577", "C:\\Podcast\\itn", "itn"));
-    feeds.push_back(FeedData("http://learningenglish.voanews.com/podcast/?count=1&zoneId=1579", "C:\\Podcast\\sitn", "sitn"));
-    feeds.push_back(FeedData("http://learningenglish.voanews.com/podcast/?count=1&zoneId=1580", "C:\\Podcast\\tia", "tia"));
-    feeds.push_back(FeedData("http://learningenglish.voanews.com/podcast/?count=1&zoneId=987", "C:\\Podcast\\wats", "wats"));
-
     RecordsManager* manager = new RecordsManager(this);
     connect(manager, SIGNAL(recordFinished(RecordInfo*)), SLOT(recordFinished(RecordInfo*)));
     connect(manager, SIGNAL(downloadProgress(RecordInfo*,qint64,qint64)), SLOT(downloadProgress(RecordInfo*,qint64,qint64)));
 
-    for(auto feed : feeds){
+    int feedCount  = config.feedCount();
+    for(int i = 0; i < feedCount; ++i)
+    {
+        FeedData* feed = config.feedAt(i);
         RssFetcher* fetcher = new RssFetcher(feed);
         connect(fetcher, SIGNAL(finished(QVector<RecordInfo*>)), this, SLOT(finishedEx(QVector<RecordInfo*>)));
         connect(fetcher, SIGNAL(finished(QVector<RecordInfo*>)), manager, SLOT(finishedEx(QVector<RecordInfo*>)));
-        fetcher->Fetch(feed.getFeedUrl());
+        fetcher->Fetch(feed->getFeedUrl());
     }
 }
 
