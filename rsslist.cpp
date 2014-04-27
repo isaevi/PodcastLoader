@@ -1,6 +1,7 @@
 #include <QtCore>
 #include <QtWidgets>
 #include <QtNetwork>
+#include <QtQuick/QQuickView>
 
 #include "rsslist.h"
 #include "rssfetcher.h"
@@ -15,6 +16,7 @@ RSSListing::RSSListing(QWidget *parent)
     : QWidget(parent)
 {
     fetchButton = new QPushButton(tr("Fetch"), this);
+    addButton = new QPushButton(tr("Add Feed"), this);
 
     treeWidget = new QTreeWidget(this);
     connect(treeWidget, SIGNAL(itemActivated(QTreeWidgetItem*,int)),
@@ -25,6 +27,7 @@ RSSListing::RSSListing(QWidget *parent)
     treeWidget->header()->setSectionResizeMode(QHeaderView::Stretch);
 
     connect(fetchButton, SIGNAL(clicked()), this, SLOT(fetch()));
+    connect(addButton, SIGNAL(clicked()), SLOT(addFeed()));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -32,6 +35,7 @@ RSSListing::RSSListing(QWidget *parent)
 
 
     hboxLayout->addWidget(fetchButton);
+    hboxLayout->addWidget(addButton);
 
     layout->addLayout(hboxLayout);
     layout->addWidget(treeWidget);
@@ -135,6 +139,13 @@ void RSSListing::fetch()
     fetchButton->setEnabled(false);
     treeWidget->clear();
     get();
+}
+
+void RSSListing::addFeed()
+{
+    QQuickView* dialog = new QQuickView();
+    dialog->setSource(QUrl::fromLocalFile("addFeedDialog.qml"));
+    dialog->show();
 }
 
 void RSSListing::finished()

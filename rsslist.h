@@ -65,6 +65,7 @@ public:
 
 public slots:
     void fetch();
+    void addFeed();
     void finished();
     void finishedEx(QVector<RecordInfo*> records);
     void itemActivated(QTreeWidgetItem * item);
@@ -79,6 +80,7 @@ private:
     void get();
     QTreeWidget *treeWidget;
     QPushButton *fetchButton;
+    QPushButton *addButton;
     QHash<RecordInfo*, int> _hash;
     int _recordIndex = 0;
     Configuration config;
