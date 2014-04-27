@@ -4,6 +4,7 @@
 #include <QUrl>
 #include <QString>
 #include <QSet>
+#include <QMutex>
 
 class FeedData
 {
@@ -15,12 +16,13 @@ public:
     QString getFeedPrefix() const {return _feedPrefix;}
     void addProcessedGuid(const QString &guid);
     bool isContainsAmongProcessed(const QString& guid);
-    const QSet<QString>& getProcessedGuids() {return _processedGuids;}
+    QSet<QString> getProcessedGuids();
 private:
     QUrl _feedUrl;
     QString _feedDir;
     QString _feedPrefix;
     QSet<QString> _processedGuids;
+    QMutex _mutex;
 };
 
 #endif // FEEDDATA_H

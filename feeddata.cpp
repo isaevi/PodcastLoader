@@ -1,3 +1,4 @@
+#include <QMutexLocker>
 #include "feeddata.h"
 
 FeedData::FeedData(QString feedUrl, QString feedDir, QString feedPrefix)
@@ -9,10 +10,18 @@ FeedData::FeedData(QString feedUrl, QString feedDir, QString feedPrefix)
 
 void FeedData::addProcessedGuid(const QString& guid)
 {
+    QMutexLocker lock(&_mutex);
     _processedGuids.insert(guid);
 }
 
 bool FeedData::isContainsAmongProcessed(const QString& guid)
 {
+    QMutexLocker lock(&_mutex);
     return _processedGuids.contains(guid);
+}
+
+QSet<QString> FeedData::getProcessedGuids()
+{
+    QMutexLocker lock(&_mutex);
+    return _processedGuids;
 }
