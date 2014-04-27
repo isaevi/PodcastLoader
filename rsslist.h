@@ -72,6 +72,7 @@ public slots:
     void error(QNetworkReply::NetworkError);
     void recordFinished(RecordInfo* record);
     void downloadProgress(RecordInfo* record, qint64 bytesReceived, qint64 bytesTotal);
+    void feedAccepted(QString url, QString directory, QString prefix);
 
 protected:
     void closeEvent(QCloseEvent *event);

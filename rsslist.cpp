@@ -2,6 +2,8 @@
 #include <QtWidgets>
 #include <QtNetwork>
 #include <QtQuick/QQuickView>
+#include <QQmlEngine>
+#include <QQmlComponent>
 
 #include "rsslist.h"
 #include "rssfetcher.h"
@@ -10,6 +12,7 @@
 #include "feeddata.h"
 #include "downloader.h"
 #include "parser.h"
+#include "rssapplication.h"
 
 
 RSSListing::RSSListing(QWidget *parent)
@@ -142,10 +145,15 @@ void RSSListing::fetch()
 }
 
 void RSSListing::addFeed()
+{    
+    QQmlComponent component(qApp->qmlEngine(), "addFeedDialog.qml");
+    QObject* obj = component.create();
+    connect(obj, SIGNAL(accepted(QString, QString, QString)), SLOT(feedAccepted(QString, QString, QString)));
+}
+
+void RSSListing::feedAccepted(QString url, QString directory, QString prefix)
 {
-    QQuickView* dialog = new QQuickView();
-    dialog->setSource(QUrl::fromLocalFile("addFeedDialog.qml"));
-    dialog->show();
+    config.addFeed(url, directory, prefix);
 }
 
 void RSSListing::finished()
