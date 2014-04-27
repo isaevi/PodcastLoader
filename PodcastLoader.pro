@@ -18,9 +18,14 @@ SOURCES += main.cpp \
     recordsmanager.cpp \
     rsslist.cpp \
     configuration.cpp
-QT += network xml widgets xmlpatterns
+QT += network xml widgets xmlpatterns quick
 QMAKE_CXXFLAGS = -std=c++11
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/xml/rsslisting
 INSTALLS += target
+
+FORMS +=
+
+OTHER_FILES += \
+    addFeedDialog.qml
