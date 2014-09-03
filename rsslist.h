@@ -84,7 +84,7 @@ private:
     QPushButton *addButton;
     QHash<RecordInfo*, int> _hash;
     int _recordIndex = 0;
-    Configuration config;
+    FeedManager config;
 };
 
 #endif

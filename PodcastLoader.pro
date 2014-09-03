@@ -1,3 +1,5 @@
+# CONFIG += console
+
 HEADERS += \
     recordinfo.h \
     parser.h \
@@ -7,7 +9,8 @@ HEADERS += \
     rssapplication.h \
     recordsmanager.h \
     rsslist.h \
-    configuration.h
+    configuration.h \
+    entrypoint.h
 SOURCES += main.cpp \
     recordinfo.cpp \
     parser.cpp \
@@ -17,9 +20,11 @@ SOURCES += main.cpp \
     rssapplication.cpp \
     recordsmanager.cpp \
     rsslist.cpp \
-    configuration.cpp
-QT += network xml widgets xmlpatterns quick
+    configuration.cpp \
+    entrypoint.cpp
+QT += network xml widgets xmlpatterns quick qml
 QMAKE_CXXFLAGS = -std=c++11
+#CONFIG += c++11
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/xml/rsslisting
@@ -28,4 +33,11 @@ INSTALLS += target
 FORMS +=
 
 OTHER_FILES += \
-    addFeedDialog.qml
+    main.qml \
+    LabeledTextInput.qml \
+    FeedDetails.qml \
+    FeedItemDelegate.qml \
+    img/settings.png
+
+RESOURCES += \
+    res.qrc

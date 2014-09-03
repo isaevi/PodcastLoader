@@ -5,17 +5,23 @@
 #include "configuration.h"
 #include "feeddata.h"
 
-Configuration::Configuration()
-{
-}
+const QString dirAttr = "dir";
+const QString urlAttr = "url";
+const QString prefixAttr = "prefix";
+const QString titleAttr = "title";
+const QString feedNode = "Feed";
+const QString guidNode = "Guid";
+const QString feedsConfiguration = "Configuration";
+const QString configName = "config.xml";
+const QString tempoparyConfigName = "config_new.xml";
 
-FeedData* Configuration::feedAt(const int index)
+FeedData* FeedManager::feedAt(const int index)
 {
     Q_ASSERT(index < _feeds.size());
     return _feeds[index];
 }
 
-void Configuration::load()
+void FeedManager::load()
 {
     QFile file(configName);
     if(!file.open(QFile::ReadOnly | QFile::Text) || !file.exists())
@@ -36,10 +42,11 @@ void Configuration::load()
     while ( !element.isNull() )
     {
         // do all you need to do with <name> element
+        QString title = element.attribute(titleAttr);
         QString dir = element.attribute(dirAttr);
         QString url = element.attribute(urlAttr);
         QString prefix = element.attribute(prefixAttr);
-        FeedData* feed = new FeedData(url, dir, prefix);
+        FeedData* feed = new FeedData(title, url, dir, prefix);
 
         QDomNode node = element.firstChild();
         while(!node.isNull())
@@ -58,7 +65,7 @@ void Configuration::load()
     file.close();
 }
 
-void Configuration::save()
+void FeedManager::save()
 {
     QFile file(tempoparyConfigName);
     if(!file.open(QIODevice::WriteOnly))
@@ -75,9 +82,10 @@ void Configuration::save()
     for(auto it = _feeds.begin(); it != _feeds.end(); ++it )
     {
         QDomElement node = doc.createElement(feedNode);
-        node.setAttribute(urlAttr, (*it)->getFeedUrl().toString());
-        node.setAttribute(dirAttr, (*it)->getFeedDir());
-        node.setAttribute(prefixAttr, (*it)->getFeedPrefix());
+        node.setAttribute(titleAttr, (*it)->title());
+        node.setAttribute(urlAttr, (*it)->url().toString());
+        node.setAttribute(dirAttr, (*it)->dir());
+        node.setAttribute(prefixAttr, (*it)->prefix());
 
         const QSet<QString> guids = (*it)->getProcessedGuids();
         for(auto guid : guids)
@@ -106,8 +114,65 @@ void Configuration::save()
 }
 
 
-void Configuration::addFeed(QString feedUrl, QString feedDir, QString feedPrefix)
+void FeedManager::addFeed(QString feedTitle, QString feedUrl, QString feedDir, QString feedPrefix)
 {
-    FeedData* feed = new FeedData(feedUrl, feedDir, feedPrefix);
+    FeedData* feed = new FeedData(feedTitle, feedUrl, feedDir, feedPrefix);
     _feeds.append(feed);
+    emit feedsChanged();
 }
+
+void FeedManager::addStubFeed()
+{
+    FeedData* feed = new FeedData();
+    _feeds.append(feed);
+    emit feedsChanged();
+}
+
+void FeedManager::resetFeedAt(const int index)
+{
+    FeedData* feed = feedAt(index);
+    if(feed->empty())
+    {
+        _feeds.removeAt(index);
+        //delete feed;
+        feed->deleteLater();
+    }
+    emit feedsChanged();
+}
+
+void FeedManager::removeAt(const int index)
+{
+    FeedData* feed = feedAt(index);
+    _feeds.removeAt(index);
+    feed->deleteLater();
+    emit feedsChanged();
+}
+
+QQmlListProperty<FeedData> FeedManager::feeds()
+{
+    return QQmlListProperty<FeedData>(this, 0, FeedManager::add, FeedManager::count, FeedManager::at, nullptr);
+}
+
+void FeedManager::add(QQmlListProperty<FeedData> *list, FeedData *feed)
+{
+    FeedManager *config = qobject_cast<FeedManager *>(list->object);
+    if (config)
+        config->addFeed("", feed->url().toString(), feed->dir(), feed->prefix());
+}
+
+int FeedManager::count(QQmlListProperty<FeedData> *list)
+{
+    FeedManager *config = qobject_cast<FeedManager *>(list->object);
+    if (config)
+        return config->feedCount();
+    return 0;
+}
+
+FeedData* FeedManager::at(QQmlListProperty<FeedData> *list, int index)
+{
+    FeedManager *config = qobject_cast<FeedManager *>(list->object);
+    if (config)
+        return config->feedAt(index);
+    return nullptr;
+}
+

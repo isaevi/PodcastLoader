@@ -69,7 +69,7 @@ void RSSListing::get()
         RssFetcher* fetcher = new RssFetcher(feed);
         connect(fetcher, SIGNAL(finished(QVector<RecordInfo*>)), this, SLOT(finishedEx(QVector<RecordInfo*>)));
         connect(fetcher, SIGNAL(finished(QVector<RecordInfo*>)), manager, SLOT(finishedEx(QVector<RecordInfo*>)));
-        fetcher->Fetch(feed->getFeedUrl());
+        fetcher->Fetch(feed->url());
     }
 }
 
@@ -147,14 +147,14 @@ void RSSListing::fetch()
 
 void RSSListing::addFeed()
 {    
-    QQmlComponent component(qApp->qmlEngine(), "addFeedDialog.qml");
+    QQmlComponent component(qApp->qmlEngine(), QUrl("qrc:/addFeedDialog.qml"));
     QObject* obj = component.create();
     connect(obj, SIGNAL(accepted(QString, QString, QString)), SLOT(feedAccepted(QString, QString, QString)));
 }
 
 void RSSListing::feedAccepted(QString url, QString directory, QString prefix)
 {
-    config.addFeed(url, directory, prefix);
+    config.addFeed("", url, directory, prefix);
 }
 
 void RSSListing::finished()
