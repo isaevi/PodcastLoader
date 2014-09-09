@@ -66,17 +66,35 @@ Window {
                 model: config.feeds
                 delegate: FeedItemDelegate {
                     onResetFeed: config.resetFeedAt(list.currentIndex)
+                    onSelectionChanged: {
+                        if(list.currentIndex > -1)
+                        {
+                            rssManager.setActiveFeed(config.feedAt(list.currentIndex))
+                        }
+                    }
                 }
                 highlight: Rectangle { color: "steelblue" }
                 highlightMoveVelocity: 9999999
 
                 onCountChanged: deleteFeedBtn.enabled = list.currentIndex !== -1
             }
-            Rectangle {
-                width: 300
-                height: parent.height - bottomPanel1.height
-                color: "green"
+            ListView {
+                id: rssList
+                width: parent.width - list.width
+                height: parent.height  - bottomPanel.height
+                clip: true
+
+                model: rssManager.rssRecords
+                delegate: RssRecordsDelegate {
+                    onLaunchDownloading: {
+                        if(rssList.currentIndex > -1)
+                        {
+                            downloader.addRecordForDownloading(rssManager.rssAt(rssList.currentIndex))
+                        }
+                    }
+                }
             }
+
             RowLayout {
                 id: bottomPanel
                 height: 30

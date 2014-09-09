@@ -50,7 +50,7 @@
 #include <QHash>
 
 #include "recordinfo.h"
-#include "configuration.h"
+#include "feedmanager.h"
 #include "feeddata.h"
 
 class QTreeWidget;

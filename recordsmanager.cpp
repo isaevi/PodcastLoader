@@ -18,11 +18,11 @@ RecordsManager::RecordsManager(QObject *parent) :
 
 RecordsManager::~RecordsManager()
 {
-    for(auto record : _finishedRecords)
-        delete record;
+//    for(auto record : _finishedRecords)
+//        delete record;
 }
 
-void RecordsManager::finishedEx(QVector<RecordInfo *> records)
+void RecordsManager::addRecordsForDownloading(QVector<RecordInfo *> records)
 {
     if(_records.isEmpty())
         _records.swap(records);
@@ -31,18 +31,23 @@ void RecordsManager::finishedEx(QVector<RecordInfo *> records)
     hadMoreRecords();
 }
 
+void RecordsManager::addRecordForDownloading(RecordInfo *record)
+{
+    _records.push_back(record);
+    hadMoreRecords();
+}
+
 void RecordsManager::downloaded(RecordInfo *rec)
 {
     int index = _queuedRecords.indexOf(rec);
     if(index == -1)
     {
-        qWarning() << "Unknown record: " << rec->getTitle() << "\t\t" << rec->getUrl();
+        qWarning() << "Unknown record: " << rec->title() << "\t\t" << rec->url();
         return;
     }
 
     _queuedRecords.removeAt(index);
-    _finishedRecords.append(rec);
-    emit recordFinished(rec);
+    //emit recordFinished(rec);
     if(_records.size() > 0)
         hadMoreRecords();
 }

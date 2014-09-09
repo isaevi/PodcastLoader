@@ -17,11 +17,11 @@ public:
     void save();
 
     int feedCount() {return _feeds.size();}
-    FeedData* feedAt(const int index);
 
     QQmlListProperty<FeedData> feeds();
-
 //public slots:
+    Q_INVOKABLE
+    FeedData* feedAt(const int index);
     Q_INVOKABLE
     void addFeed(QString feedTitle, QString feedUrl, QString feedDir, QString feedPrefix);
     Q_INVOKABLE

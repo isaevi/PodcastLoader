@@ -2,7 +2,9 @@
 #define ENTRYPOINT_H
 
 #include <QObject>
-#include "configuration.h"
+#include "feedmanager.h"
+#include "rssmanager.h"
+#include "recordsmanager.h"
 
 class QQmlEngine;
 
@@ -17,6 +19,8 @@ public:
 private:
     QQmlEngine* _engine;
     FeedManager config;
+    RssManager rssManager;
+    RecordsManager recordsManager;
 };
 
 #endif // ENTRYPOINT_H

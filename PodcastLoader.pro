@@ -9,8 +9,9 @@ HEADERS += \
     rssapplication.h \
     recordsmanager.h \
     rsslist.h \
-    configuration.h \
-    entrypoint.h
+    entrypoint.h \
+    feedmanager.h \
+    rssmanager.h
 SOURCES += main.cpp \
     recordinfo.cpp \
     parser.cpp \
@@ -20,8 +21,9 @@ SOURCES += main.cpp \
     rssapplication.cpp \
     recordsmanager.cpp \
     rsslist.cpp \
-    configuration.cpp \
-    entrypoint.cpp
+    entrypoint.cpp \
+    feedmanager.cpp \
+    rssmanager.cpp
 QT += network xml widgets xmlpatterns quick qml
 QMAKE_CXXFLAGS = -std=c++11
 #CONFIG += c++11
@@ -37,7 +39,8 @@ OTHER_FILES += \
     LabeledTextInput.qml \
     FeedDetails.qml \
     FeedItemDelegate.qml \
-    img/settings.png
+    img/settings.png \
+    RssRecordsDelegate.qml
 
 RESOURCES += \
     res.qrc

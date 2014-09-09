@@ -7,5 +7,5 @@ RssApplication::RssApplication(int &argc, char **argv) :
     QApplication(argc, argv)
 {
     _manager = new QNetworkAccessManager(this);
-    _engine = new QQmlEngine(this);
+//    _engine = new QQmlEngine(this);
 }

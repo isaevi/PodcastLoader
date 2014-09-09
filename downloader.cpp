@@ -28,7 +28,7 @@ bool Downloader::get(RecordInfo* rec)
         return false;
     _rec = rec;
     _isBusy = true;
-    QNetworkRequest request(rec->getUrl());
+    QNetworkRequest request(rec->url());
     if(_reply)
     {
         disconnect(_reply, 0, this, 0);
@@ -36,7 +36,7 @@ bool Downloader::get(RecordInfo* rec)
     }
     _reply = qApp->networkAccessMenager()->get(request);
     connect(_reply, SIGNAL(finished()), SLOT(finished()));
-    connect(_reply, SIGNAL(downloadProgress(qint64,qint64)), SLOT(downloadProgress(qint64,qint64)));
+    connect(_reply, SIGNAL(downloadProgress(qint64,qint64)), rec, SLOT(downloadProgress(qint64,qint64)));
 
     connect(_reply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(error(QNetworkReply::NetworkError)));
     return true;
@@ -52,8 +52,8 @@ void Downloader::PrepareDirectory(QString title)
 void Downloader::finished()
 {
     QByteArray downloadedData = _reply->readAll();
-    QString title = _rec->getTitle().replace(QRegExp("[/:*?\"<>| ,]"), "_");
-    title = _rec->getFeed()->dir() + "\\" + _rec->getFeed()->prefix() + "_" + _rec->getDate().toString("yyMMdd") + "_" + title + ".mp3";
+    QString title = _rec->title().replace(QRegExp("[/:*?\"<>| ,]"), "_");
+    title = _rec->getFeed()->dir() + "\\" + _rec->getFeed()->prefix() + "_" + _rec->date().toString("yyMMdd") + "_" + title + ".mp3";
     PrepareDirectory(title);
     QFile file(title);
     if(!file.open(QIODevice::WriteOnly))
@@ -69,7 +69,7 @@ void Downloader::finished()
     _isBusy = false;
     _reply->deleteLater();
     _reply = nullptr;
-    _rec->getFeed()->addProcessedGuid(_rec->getGuid());
+    _rec->getFeed()->addProcessedGuid(_rec->guid());
     emit downloaded(_rec);
 }
 
@@ -81,7 +81,7 @@ void Downloader::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 
 void Downloader::error(QNetworkReply::NetworkError error)
 {
-    qDebug() << "Error #" << error << "\t" << _rec->getTitle();
+    qDebug() << "Error #" << error << "\t" << _rec->title();
     _reply->deleteLater();
     _reply = nullptr;
 }

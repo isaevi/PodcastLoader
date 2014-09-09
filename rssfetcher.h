@@ -25,7 +25,7 @@ public slots:
     void finished();
 
 signals:
-    void finished(QVector<RecordInfo*> records);
+    void finished(QList<RecordInfo*> records, FeedData *feed);
     void canceled();
 
 private:

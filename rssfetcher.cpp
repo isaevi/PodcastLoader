@@ -41,16 +41,16 @@ void RssFetcher::finished()
     if (statusCode >= 200 && statusCode < 300) {
         QByteArray data = _currentReply->readAll();
         QVector<RecordInfo*> records = Parser::parseXml(data);
-        QVector<RecordInfo*> result;
+        QList<RecordInfo*> result;
         for(auto rec : records)
         {
-            if(!_feed->isContainsAmongProcessed(rec->getGuid()))
+            if(!_feed->isContainsAmongProcessed(rec->guid()))
             {
                 rec->setFeed(_feed);
                 result.append(rec);
             }
         }
-        emit finished(result);
+        emit finished(result, _feed);
     }
     else
         emit canceled();

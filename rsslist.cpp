@@ -51,9 +51,9 @@ RSSListing::RSSListing(QWidget *parent)
 
 void RSSListing::closeEvent(QCloseEvent *event)
  {
-    config.save();
-    delete qApp->qmlEngine();
-    event->accept();
+//    config.save();
+//    delete qApp->qmlEngine();
+//    event->accept();
  }
 
 void RSSListing::get()
@@ -78,9 +78,9 @@ void RSSListing::finishedEx(QVector<RecordInfo*> records)
     for(auto rec : records)
     {
         QTreeWidgetItem *item = new QTreeWidgetItem;
-        item->setText(0, rec->getTitle());
-        item->setText(1, rec->getUrl());
-        item->setText(2, rec->getDate().toString());
+        item->setText(0, rec->title());
+        item->setText(1, rec->url().toString());
+        item->setText(2, rec->date().toString());
         item->setText(3, "Available");
         item->setText(4, "0");
         ++_recordIndex;
@@ -94,7 +94,7 @@ void RSSListing::recordFinished(RecordInfo* record)
 {
     if(!_hash.contains(record))
     {
-        qWarning() << "Coulnd't find in hash the record :" << record->getTitle();
+        qWarning() << "Coulnd't find in hash the record :" << record->title();
         return;
     }
     int index = _hash[record];
@@ -116,7 +116,7 @@ void RSSListing::downloadProgress(RecordInfo* record, qint64 bytesReceived, qint
         return;
     if(!_hash.contains(record))
     {
-        qWarning() << "Coulnd't find in hash the record :" << record->getTitle();
+        qWarning() << "Coulnd't find in hash the record :" << record->title();
         return;
     }
     int index = _hash[record];
@@ -147,9 +147,9 @@ void RSSListing::fetch()
 
 void RSSListing::addFeed()
 {    
-    QQmlComponent component(qApp->qmlEngine(), QUrl("qrc:/addFeedDialog.qml"));
-    QObject* obj = component.create();
-    connect(obj, SIGNAL(accepted(QString, QString, QString)), SLOT(feedAccepted(QString, QString, QString)));
+//    QQmlComponent component(qApp->qmlEngine(), QUrl("qrc:/addFeedDialog.qml"));
+//    QObject* obj = component.create();
+//    connect(obj, SIGNAL(accepted(QString, QString, QString)), SLOT(feedAccepted(QString, QString, QString)));
 }
 
 void RSSListing::feedAccepted(QString url, QString directory, QString prefix)

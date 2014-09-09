@@ -13,7 +13,7 @@
 
 int main(int argc, char **argv)
 {    
-    QGuiApplication app(argc, argv);
+    RssApplication app(argc, argv);
 
     QQmlEngine engine;
     QQmlComponent component(&engine);

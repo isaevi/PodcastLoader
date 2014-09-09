@@ -19,7 +19,9 @@ signals:
     void downloadProgress(RecordInfo* rec, qint64 bytesReceived, qint64 bytesTotal);
 
 public slots:
-    void finishedEx(QVector<RecordInfo*> records);
+    void addRecordsForDownloading(QVector<RecordInfo*> records);
+    Q_INVOKABLE
+    void addRecordForDownloading(RecordInfo* record);
 
 private:
     void hadMoreRecords();
@@ -29,7 +31,6 @@ private slots:
 
 private:
     QVector<RecordInfo*> _records;
-    QVector<RecordInfo*> _finishedRecords;
     QVector<RecordInfo*> _queuedRecords;
     QVector<Downloader*> _loaders;
     Downloader _stub;

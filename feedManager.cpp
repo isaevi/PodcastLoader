@@ -2,7 +2,7 @@
 #include <QFile>
 #include <QDebug>
 
-#include "configuration.h"
+#include "feedmanager.h"
 #include "feeddata.h"
 
 const QString dirAttr = "dir";
@@ -17,7 +17,7 @@ const QString tempoparyConfigName = "config_new.xml";
 
 FeedData* FeedManager::feedAt(const int index)
 {
-    Q_ASSERT(index < _feeds.size());
+    Q_ASSERT(index >=0 && index < _feeds.size());
     return _feeds[index];
 }
 

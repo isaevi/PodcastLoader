@@ -9,12 +9,14 @@ FocusScope {
     clip: true
 
     signal resetFeed()
+    signal selectionChanged()
     property bool expanded: delegate === ListView.view.expandedItem
 
     MouseArea {
         anchors.fill: delegate
         onClicked: {
             delegate.ListView.view.currentIndex = index
+            selectionChanged()
             //window.currentFeed = feed
         }
     }
@@ -96,6 +98,7 @@ FocusScope {
                         else {
                             delegate.ListView.view.expandedItem = delegate;
                             delegate.ListView.view.currentIndex = index
+                            selectionChanged()
                         }
                         initDetails()
                     }
