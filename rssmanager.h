@@ -40,6 +40,8 @@ public:
     RecordInfo* rssAt(int index);
 signals:
     void rssRecordsChanged(QQmlListProperty<RecordInfo> arg);
+    void startQueringRecords();
+    void endQueringRecords(FeedData *forFeed);
     //void rssRecordsChanged();
 
 private slots:

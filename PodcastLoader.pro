@@ -40,7 +40,10 @@ OTHER_FILES += \
     FeedDetails.qml \
     FeedItemDelegate.qml \
     img/settings.png \
-    RssRecordsDelegate.qml
+    RssRecordsDelegate.qml \
+    img/download_media.png \
+    BusyIndicator.qml \
+    img/busy.png
 
 RESOURCES += \
     res.qrc

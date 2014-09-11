@@ -14,6 +14,7 @@ QQmlListProperty<RecordInfo> RssManager::rssRecords()
 
 void RssManager::setActiveFeed(FeedData *feed)
 {
+    emit startQueringRecords();
     bool needToSignal = false;
     //QList<RecordInfo*> rssRecords;
     {
@@ -52,7 +53,8 @@ void RssManager::setActiveFeed(FeedData *feed)
     {
 //        qWarning("setActiveFeed call to signal");
         //rssRecordsChanged(rssRecords);
-        rssRecordsChanged(RssManager::rssRecords());
+        emit rssRecordsChanged(RssManager::rssRecords());
+        emit endQueringRecords(feed);
     }
 }
 
@@ -78,7 +80,8 @@ void RssManager::finishedEx(QList<RecordInfo *> rss, FeedData *feed)
         feedDetails[feed] = details;
     }
     //rssRecordsChanged(details.rssRecords);
-    rssRecordsChanged(RssManager::rssRecords());
+    emit rssRecordsChanged(RssManager::rssRecords());
+    emit endQueringRecords(feed);
 //    qWarning("finishedEx second out");
 }
 

@@ -16,6 +16,11 @@ Window {
     title: "Podcast Loader"
 
     property real defaultSpacing: 10
+    property int bottomPanelsHeigh: 30
+    function showBusyIndicator(show){
+        rssList.visible = !show;
+        fetchingRecorsIndicator.visible = show;
+    }
 
     Desaturate {
         id: colorize
@@ -50,6 +55,13 @@ Window {
             width: parent.width
             height: parent.height
 
+
+            Connections {
+                target: rssManager
+                onStartQueringRecords: showBusyIndicator(true)
+                onEndQueringRecords: showBusyIndicator(false)
+            }
+
             ListView {
                 id: list
                 focus: true
@@ -61,7 +73,7 @@ Window {
                 property Item expandedItem;
                 interactive: expandedItem === null;
                 width: 240
-                height: parent.height  - bottomPanel.height
+                height: parent.height  - bottomPanelsHeigh
                 clip: true
                 model: config.feeds
                 delegate: FeedItemDelegate {
@@ -78,26 +90,36 @@ Window {
 
                 onCountChanged: deleteFeedBtn.enabled = list.currentIndex !== -1
             }
-            ListView {
-                id: rssList
+            FocusScope {
                 width: parent.width - list.width
-                height: parent.height  - bottomPanel.height
-                clip: true
+                height: parent.height  - bottomPanelsHeigh
 
-                model: rssManager.rssRecords
-                delegate: RssRecordsDelegate {
-                    onLaunchDownloading: {
-                        if(rssList.currentIndex > -1)
-                        {
-                            downloader.addRecordForDownloading(rssManager.rssAt(rssList.currentIndex))
+                ListView {
+                    id: rssList
+                    anchors.fill: parent
+                    clip: true
+
+                    model: rssManager.rssRecords
+                    delegate: RssRecordsDelegate {
+                        onLaunchDownloading: {
+                            if(rssList.currentIndex > -1)
+                            {
+                                downloader.addRecordForDownloading(rssManager.rssAt(rssList.currentIndex))
+                            }
                         }
                     }
+                }
+
+                BusyIndicator {
+                    id: fetchingRecorsIndicator
+                    anchors.fill: parent
+                    visible: false
                 }
             }
 
             RowLayout {
-                id: bottomPanel
-                height: 30
+                id: leftBottomPanel
+                height: bottomPanelsHeigh
                 width: 240
                 Button {
                     id: addFeedBtn
