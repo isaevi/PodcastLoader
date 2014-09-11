@@ -151,11 +151,20 @@ Window {
                     }
                 }
             }
-            Rectangle {
-                id: bottomPanel1
-                width: 300
-                height: 30
-                color: "blue"
+
+            RowLayout {
+                id: rightBottomPanel
+                width: parent.width - list.width
+                height: bottomPanelsHeigh
+                Button {
+                    id: downloadAllRecords
+                    text: "Download all"
+                    Layout.alignment: "AlignRight"
+                    onClicked: {
+                        for(var i = 0; i < rssList.count; ++i)
+                            downloader.addRecordForDownloading(rssManager.rssAt(i))
+                    }
+                }
             }
         }
 
