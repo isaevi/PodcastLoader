@@ -9,15 +9,14 @@ FocusScope {
     clip: true
 
     signal resetFeed()
-    signal selectionChanged()
+    signal selectionChanged(int new_index)
     property bool expanded: delegate === ListView.view.expandedItem
 
     MouseArea {
         anchors.fill: delegate
         onClicked: {
-            delegate.ListView.view.currentIndex = index
-            selectionChanged()
-            //window.currentFeed = feed
+            //delegate.ListView.view.currentIndex = index
+            selectionChanged(index)
         }
     }
     property int heightOfVisiblePart : 60
@@ -46,11 +45,8 @@ FocusScope {
         Item {
             id: commonView
             height: heightOfVisiblePart
-            //width: parent.width
-            //anchors.top: parent.top
             anchors{
                 top: parent.top
-                //fill: parent
                 left: parent.left
                 right: parent.right
             }

@@ -79,9 +79,12 @@ Window {
                 delegate: FeedItemDelegate {
                     onResetFeed: config.resetFeedAt(list.currentIndex)
                     onSelectionChanged: {
-                        if(list.currentIndex > -1)
+                        if(new_index > -1 && new_index < list.count)
                         {
-                            rssManager.setActiveFeed(config.feedAt(list.currentIndex))
+                            list.currentIndex = new_index
+
+                            var feed = config.feedAt(list.currentIndex)
+                            rssManager.setActiveFeed(feed)
                         }
                     }
                 }
