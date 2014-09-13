@@ -28,7 +28,7 @@ QString _description;
 int _downloadPercent;
 
 public:
-    RecordInfo();
+    RecordInfo(QObject *parent = nullptr);
     FeedData* getFeed () {return _feed;}
     void setFeed(FeedData* feed) {_feed = feed;}
     bool operator ==(const RecordInfo& other);

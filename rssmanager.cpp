@@ -71,6 +71,8 @@ void RssManager::finishedEx(QList<RecordInfo *> rss, FeedData *feed)
     FeedInormation details = feedDetails[feed];
     //return QQmlListProperty<FeedData>(this, 0, FeedManager::add, FeedManager::count, FeedManager::at, nullptr);
     details.rssRecords = rss;
+    for(auto rec : details.rssRecords)
+        rec->setParent(this);
     details.state.store(Finished);
     {
 //        qWarning("finishedEx second in");

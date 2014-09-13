@@ -16,8 +16,8 @@ class FeedData : public QObject
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(bool empty READ empty WRITE setEmpty NOTIFY emptyChanged)
 public:
-    FeedData() : QObject(), _empty(true) {}
-    FeedData(QString feedTitle, QString feedUrl, QString feedDir, QString feedPrefix);
+    FeedData(QObject* parent = nullptr) : QObject(parent), _empty(true) {}
+    FeedData(QString feedTitle, QString feedUrl, QString feedDir, QString feedPrefix, QObject *parent);
 
     void addProcessedGuid(const QString &guid);
     bool isContainsAmongProcessed(const QString& guid);

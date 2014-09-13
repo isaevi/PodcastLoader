@@ -2,8 +2,9 @@
 
 #include "recordinfo.h"
 
-RecordInfo::RecordInfo() : _downloadPercent(0)
+RecordInfo::RecordInfo(QObject *parent) : QObject(parent), _downloadPercent(0)
 {
+
 }
 
 bool RecordInfo::operator ==(const RecordInfo& other)

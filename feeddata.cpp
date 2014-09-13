@@ -1,7 +1,7 @@
 #include <QMutexLocker>
 #include "feeddata.h"
 
-FeedData::FeedData(QString feedTitle, QString  feedUrl, QString feedDir, QString feedPrefix) : QObject()
+FeedData::FeedData(QString feedTitle, QString  feedUrl, QString feedDir, QString feedPrefix, QObject* parent) : QObject(parent)
 {
     _title = feedTitle;
     _url = feedUrl;

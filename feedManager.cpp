@@ -46,7 +46,7 @@ void FeedManager::load()
         QString dir = element.attribute(dirAttr);
         QString url = element.attribute(urlAttr);
         QString prefix = element.attribute(prefixAttr);
-        FeedData* feed = new FeedData(title, url, dir, prefix);
+        FeedData* feed = new FeedData(title, url, dir, prefix, this);
 
         QDomNode node = element.firstChild();
         while(!node.isNull())
@@ -116,7 +116,7 @@ void FeedManager::save()
 
 void FeedManager::addFeed(QString feedTitle, QString feedUrl, QString feedDir, QString feedPrefix)
 {
-    FeedData* feed = new FeedData(feedTitle, feedUrl, feedDir, feedPrefix);
+    FeedData* feed = new FeedData(feedTitle, feedUrl, feedDir, feedPrefix, this);
     _feeds.append(feed);
     emit feedsChanged();
 }
