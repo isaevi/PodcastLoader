@@ -46,7 +46,7 @@ void FeedManager::load()
         QString dir = element.attribute(dirAttr);
         QString url = element.attribute(urlAttr);
         QString prefix = element.attribute(prefixAttr);
-        FeedData* feed = new FeedData(title, url, dir, prefix, this);
+        auto feed = addFeed(title, url, dir, prefix);
 
         QDomNode node = element.firstChild();
         while(!node.isNull())
@@ -59,7 +59,7 @@ void FeedManager::load()
             }
             node = node.nextSibling();
         }
-        _feeds.append(feed);
+
         element = element.nextSiblingElement(feedNode);
     }
     file.close();
@@ -81,6 +81,8 @@ void FeedManager::save()
     doc.appendChild(root);
     for(auto it = _feeds.begin(); it != _feeds.end(); ++it )
     {
+        if((*it)->isAggregateStub())
+            continue;
         QDomElement node = doc.createElement(feedNode);
         node.setAttribute(titleAttr, (*it)->title());
         node.setAttribute(urlAttr, (*it)->url().toString());
@@ -113,12 +115,19 @@ void FeedManager::save()
         qDebug() << "Couldn't rename configuration.";
 }
 
+FeedManager::FeedManager(QObject *parent) : QObject(parent)
+{
+    _allFeedsStub = new FeedDataAggregate(this);
+    _feeds.append(_allFeedsStub);
+}
 
-void FeedManager::addFeed(QString feedTitle, QString feedUrl, QString feedDir, QString feedPrefix)
+FeedData* FeedManager::addFeed(QString feedTitle, QString feedUrl, QString feedDir, QString feedPrefix)
 {
     FeedData* feed = new FeedData(feedTitle, feedUrl, feedDir, feedPrefix, this);
     _feeds.append(feed);
+    _allFeedsStub->addFeed(feed);
     emit feedsChanged();
+    return feed;
 }
 
 void FeedManager::addStubFeed()
@@ -143,7 +152,8 @@ void FeedManager::resetFeedAt(const int index)
 void FeedManager::removeAt(const int index)
 {
     FeedData* feed = feedAt(index);
-    _feeds.removeAt(index);
+    _allFeedsStub->removeFeed(feed);
+    _feeds.removeAt(index);    
     feed->deleteLater();
     emit feedsChanged();
 }

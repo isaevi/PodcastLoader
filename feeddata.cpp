@@ -1,5 +1,8 @@
 #include <QMutexLocker>
 #include "feeddata.h"
+#include "helperinterfaces.h"
+
+FeedData::FeedData(QObject *parent) : QObject(parent), _empty(true), _isAggregateStub(false) {}
 
 FeedData::FeedData(QString feedTitle, QString  feedUrl, QString feedDir, QString feedPrefix, QObject* parent) : QObject(parent)
 {
@@ -8,6 +11,7 @@ FeedData::FeedData(QString feedTitle, QString  feedUrl, QString feedDir, QString
     _dir = feedDir;
     _prefix = feedPrefix;
     _empty = false;
+    _isAggregateStub = false;
     if(_title.isEmpty())
         _title = "Please, enter the title";
 
@@ -56,6 +60,19 @@ bool FeedData::empty() const
     return _empty;
 }
 
+bool FeedData::isAggregateStub() const
+{
+    return _isAggregateStub;
+}
+
+void FeedData::queueFeedToFetch(IFeedInformationFetcher *fetcher)
+{
+    QList<FeedData*> feeds;
+    feeds.append(this);
+    fetcher->resetQueue(feeds);
+    fetcher->addFeedToQueue(this);
+}
+
 void FeedData::setUrl(QUrl arg)
 {
     if (_url != arg) {
@@ -97,3 +114,43 @@ void FeedData::setEmpty(bool arg)
     emit emptyChanged(arg);
 }
 
+void FeedData::setIsAggregateStub(bool arg)
+{
+    if (_isAggregateStub == arg)
+        return;
+
+    _isAggregateStub = arg;
+    emit isAggregateStubChanged(arg);
+}
+
+
+
+FeedDataAggregate::FeedDataAggregate(QObject *parent) : FeedData(parent)
+{
+    setTitle(tr("All feeds"));
+    setIsAggregateStub(true);
+}
+
+FeedDataAggregate::FeedDataAggregate(QString feedTitle, QString feedUrl, QString feedDir, QString feedPrefix, QObject *parent)
+    : FeedData(feedTitle, feedUrl, feedDir, feedPrefix, parent)
+{
+
+}
+
+void FeedDataAggregate::queueFeedToFetch(IFeedInformationFetcher *fetcher)
+{
+    QList<FeedData*> feeds;
+    fetcher->resetQueue(_agregatedFeeds);
+    for(auto feed: _agregatedFeeds)
+        fetcher->addFeedToQueue(feed);
+}
+
+void FeedDataAggregate::addFeed(FeedData *feed)
+{
+    _agregatedFeeds.append(feed);
+}
+
+void FeedDataAggregate::removeFeed(FeedData *feed)
+{
+    _agregatedFeeds.removeOne(feed);
+}

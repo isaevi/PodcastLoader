@@ -15,15 +15,14 @@ class FeedManager : public QObject
 public:
     void load();
     void save();
-
     int feedCount() {return _feeds.size();}
+    FeedManager(QObject* parent = nullptr);
 
     QQmlListProperty<FeedData> feeds();
-//public slots:
     Q_INVOKABLE
     FeedData* feedAt(const int index);
     Q_INVOKABLE
-    void addFeed(QString feedTitle, QString feedUrl, QString feedDir, QString feedPrefix);
+    FeedData* addFeed(QString feedTitle, QString feedUrl, QString feedDir, QString feedPrefix);
     Q_INVOKABLE
     void addStubFeed();
     Q_INVOKABLE
@@ -37,6 +36,7 @@ private:
     static int count(QQmlListProperty<FeedData> *list);
     static FeedData* at(QQmlListProperty<FeedData> *list, int index);
     QList<FeedData*> _feeds;
+    FeedDataAggregate* _allFeedsStub;
 };
 
 #endif // CONFIGURATION_H

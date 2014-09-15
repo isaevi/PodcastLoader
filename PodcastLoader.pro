@@ -11,7 +11,8 @@ HEADERS += \
     rsslist.h \
     entrypoint.h \
     feedmanager.h \
-    rssmanager.h
+    rssmanager.h \
+    helperinterfaces.h
 SOURCES += main.cpp \
     recordinfo.cpp \
     parser.cpp \

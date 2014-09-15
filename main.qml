@@ -76,6 +76,7 @@ Window {
                 height: parent.height  - bottomPanelsHeigh
                 clip: true
                 model: config.feeds
+                currentIndex: -1
                 delegate: FeedItemDelegate {
                     onResetFeed: config.resetFeedAt(list.currentIndex)
                     onSelectionChanged: {

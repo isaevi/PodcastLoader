@@ -7,6 +7,8 @@
 #include <QSet>
 #include <QMutex>
 
+class IFeedInformationFetcher;
+
 class FeedData : public QObject
 {
     Q_OBJECT
@@ -15,8 +17,9 @@ class FeedData : public QObject
     Q_PROPERTY(QString prefix READ prefix WRITE setPrefix NOTIFY prefixChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(bool empty READ empty WRITE setEmpty NOTIFY emptyChanged)
+    Q_PROPERTY(bool isAggregateStub READ isAggregateStub WRITE setIsAggregateStub NOTIFY isAggregateStubChanged)
 public:
-    FeedData(QObject* parent = nullptr) : QObject(parent), _empty(true) {}
+    FeedData(QObject* parent = nullptr);
     FeedData(QString feedTitle, QString feedUrl, QString feedDir, QString feedPrefix, QObject *parent);
 
     void addProcessedGuid(const QString &guid);
@@ -27,12 +30,16 @@ public:
     QString prefix() const;
     QString title() const;    
     bool empty() const;
+    bool isAggregateStub() const;
+    virtual void queueFeedToFetch(IFeedInformationFetcher* fetcher);
+
 public slots:
     void setUrl(QUrl arg);
     void setDir(QString arg);
     void setPrefix(QString arg);
     void setTitle(QString arg);
     void setEmpty(bool arg);
+    void setIsAggregateStub(bool arg);
 
 signals:
     void urlChanged(QUrl arg);
@@ -40,6 +47,7 @@ signals:
     void prefixChanged(QString arg);
     void titleChanged(QString arg);
     void emptyChanged(bool arg);
+    void isAggregateStubChanged(bool arg);
 
 private:
     QSet<QString> _processedGuids;
@@ -49,6 +57,23 @@ private:
     QString _prefix;
     QString _title;
     bool _empty;
+    bool _isAggregateStub;
+};
+
+class FeedDataAggregate : public FeedData {
+    Q_OBJECT
+public:
+    FeedDataAggregate(QObject* parent = nullptr);
+    FeedDataAggregate(QString feedTitle, QString feedUrl, QString feedDir, QString feedPrefix, QObject *parent);
+
+    // FeedData interface
+public:
+    void queueFeedToFetch(IFeedInformationFetcher *fetcher);
+public slots:
+    void addFeed(FeedData* feed);
+    void removeFeed(FeedData* feed);
+private:
+    QList<FeedData*> _agregatedFeeds;
 };
 
 #endif // FEEDDATA_H
