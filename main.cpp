@@ -8,7 +8,6 @@
 #include <QDebug>
 
 #include "rssapplication.h"
-#include "rsslist.h"
 #include "entrypoint.h"
 
 int main(int argc, char **argv)

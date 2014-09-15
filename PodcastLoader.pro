@@ -8,7 +8,6 @@ HEADERS += \
     feeddata.h \
     rssapplication.h \
     recordsmanager.h \
-    rsslist.h \
     entrypoint.h \
     feedmanager.h \
     rssmanager.h \
@@ -21,7 +20,6 @@ SOURCES += main.cpp \
     feeddata.cpp \
     rssapplication.cpp \
     recordsmanager.cpp \
-    rsslist.cpp \
     entrypoint.cpp \
     feedmanager.cpp \
     rssmanager.cpp
