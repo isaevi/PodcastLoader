@@ -42,7 +42,8 @@ OTHER_FILES += \
     RssRecordsDelegate.qml \
     img/download_media.png \
     BusyIndicator.qml \
-    img/busy.png
+    img/busy.png \
+    ScrollBar.qml
 
 RESOURCES += \
     res.qrc

@@ -15,21 +15,8 @@ FocusScope {
     clip: true
 
     property int heightOfVisiblePart: 40
-    property color textColor : rssRecordsDelegate.ListView.isCurrentItem ? "royalblue" : "black"
-    property bool isDownloaded: downloadPercent == 100
-    Gradient {
-        id: newRss
-        GradientStop { position: 0.0; color: "white" }
-        GradientStop { position: 0.5; color: "whitesmoke" }
-        GradientStop { position: 1.0; color: "lavender" }
-    }
-    Gradient {
-        id: downloadedRss
-        GradientStop { position: 0.0; color: "grey" }
-        GradientStop { position: 0.5; color: "whitesmoke" }
-        GradientStop { position: 1.0; color: "lavender" }
-    }
-    property Gradient backGroundGradient: isDownloaded ? downloadedRss : newRss
+    property color textColor : rssRecordsDelegate.ListView.isCurrentItem ? "white" : "black"
+    property bool isDownloaded: downloadPercent == 100 
 
     signal launchDownloading()
 
@@ -41,20 +28,11 @@ FocusScope {
         }
     }
 
-    Rectangle {
-            id: background
-            width: parent.width
-            height: parent.height
-            gradient: backGroundGradient
-        }
-
     FocusScope {
         id: rssContent
-        width: parent.width
-        height: parent.height
-        anchors{
-            topMargin: 5
-            bottomMargin: 5
+        anchors {
+            fill: parent
+            rightMargin: 10
         }
 
         GridLayout {
@@ -78,23 +56,31 @@ FocusScope {
                     Layout.fillWidth: true
                     elide: Text.ElideRight
                     Layout.alignment: "AlignHCenter"
+                    anchors.topMargin: 5
                 }
             }
-            Rectangle{
+            Item{
+                id: progressInfo
                 width: 40
-                color: "yellow"
+                //color: "yellow"
                 Layout.row: 0
                 Layout.rowSpan: 2
                 Layout.column: 1
                 Layout.fillHeight: true
                 Layout.alignment: "AlignRight"
+                visible: false
+
+                BusyIndicator {
+                    anchors.fill: parent
+                    visible: !isDownloaded
+                }
                 Text {
-                    text: downloadPercent
+                    text: isDownloaded? "saved" : (downloadPercent === 0? "" : downloadPercent + "%")
+                    anchors.centerIn: parent
                 }
             }
-            Item{
+            Item {
                 width: 40
-                //color: "blue"
                 Layout.row: 0
                 Layout.rowSpan: 2
                 Layout.column: 2
@@ -105,7 +91,6 @@ FocusScope {
                     height: 32; width: 32
                     source: "img/download_media.png"
                     fillMode: Image.PreserveAspectFit
-                    //Layout.alignment: "AlignHCenter" | "AlignVCenter"
                     anchors{
                         margins: 4
                         fill: parent
@@ -115,6 +100,7 @@ FocusScope {
                         anchors.fill: downloadButton
                         onClicked: {
                             rssRecordsDelegate.ListView.view.currentIndex = index
+                            progressInfo.visible = true
                             launchDownloading()
                         }
                     }
@@ -126,6 +112,7 @@ FocusScope {
                 Layout.fillWidth: true
                 Label {
                     text: "Date:"
+                    color: textColor
                 }
 
                 Label {
@@ -133,28 +120,17 @@ FocusScope {
                     text: date
                     color: textColor
                     font { family: "Helvetica"; pixelSize: 10; bold: false }
-//                    anchors {
-//                        horizontalCenter: parent.horizontalCenter
-//                        verticalCenter: parent.verticalCenter
-//                    }
                 }
 
                 Item { width: 30 }
                 Label {
                     text: "Size:"
+                    color: textColor
                 }
                 Label {
                     text: (length/1024/1024).toFixed(2) + "(MB)"
                     color: textColor
                     font { family: "Helvetica"; pixelSize: 10; bold: false }
-                    width: parent.width - 50
-//                    anchors {
-//                        horizontalCenter: parent.horizontalCenter
-//                        top: titleText.bottom
-//                        topMargin: 4
-//                    }
-                    //Layout.fillWidth: parent
-                    //elide: Text.ElideMiddle
                 }
             }
         }

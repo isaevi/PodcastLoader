@@ -14,6 +14,8 @@ Window {
     width: 800
     height: 480
     title: "Podcast Loader"
+    //color: "#add3d4"
+    color: "#d5ecec"
 
     property real defaultSpacing: 10
     property int bottomPanelsHeigh: 30
@@ -48,13 +50,13 @@ Window {
     Item {
         id: mainFrame
         anchors.fill: parent
-        Grid {
+        anchors.margins: 3
+        GridLayout {
             id: grid
             columns: 2
             rows: 2
             width: parent.width
             height: parent.height
-
 
             Connections {
                 target: rssManager
@@ -62,69 +64,117 @@ Window {
                 onEndQueringRecords: showBusyIndicator(false)
             }
 
-            ListView {
-                id: list
-                focus: true
-
-                KeyNavigation.down: addFeedBtn
-                KeyNavigation.tab: addFeedBtn
-                KeyNavigation.backtab: addFeedBtn
-
-                property Item expandedItem;
-                interactive: expandedItem === null;
-                width: 240
-                height: parent.height  - bottomPanelsHeigh
-                clip: true
-                model: config.feeds
-                currentIndex: -1
-                delegate: FeedItemDelegate {
-                    onResetFeed: config.resetFeedAt(list.currentIndex)
-                    onSelectionChanged: {
-                        if(new_index > -1 && new_index < list.count)
-                        {
-                            list.currentIndex = new_index
-
-                            var feed = config.feedAt(list.currentIndex)
-                            rssManager.setActiveFeed(feed)
-                        }
-                    }
-                }
-                highlight: Rectangle { color: "steelblue" }
-                highlightMoveVelocity: 9999999
-
-                onCountChanged: deleteFeedBtn.enabled = list.currentIndex !== -1
-            }
-            FocusScope {
-                width: parent.width - list.width
-                height: parent.height  - bottomPanelsHeigh
+            Rectangle {
+                color: "#add3d4"
+                radius: 4
+                Layout.minimumWidth: 240
+                Layout.alignment: "AlignLeft"
+                Layout.fillHeight: true
 
                 ListView {
-                    id: rssList
-                    anchors.fill: parent
-                    clip: true
+                    id: list
+                    focus: true
+                    anchors {
+                        fill: parent
+                        margins: 5
+                    }
 
-                    model: rssManager.rssRecords
-                    delegate: RssRecordsDelegate {
-                        onLaunchDownloading: {
-                            if(rssList.currentIndex > -1)
+                    KeyNavigation.down: addFeedBtn
+                    KeyNavigation.tab: addFeedBtn
+                    KeyNavigation.backtab: addFeedBtn
+
+                    property Item expandedItem;
+                    interactive: expandedItem === null;
+
+                    clip: true
+                    model: config.feeds
+                    currentIndex: -1
+                    delegate: FeedItemDelegate {
+                        onResetFeed: config.resetFeedAt(list.currentIndex)
+                        onSelectionChanged: {
+                            if(new_index > -1 && new_index < list.count)
                             {
-                                downloader.addRecordForDownloading(rssManager.rssAt(rssList.currentIndex))
+                                list.currentIndex = new_index
+
+                                var feed = config.feedAt(list.currentIndex)
+                                selectedFeedName.text = feed.title
+                                rssManager.setActiveFeed(feed)
+
+                                deleteFeedBtn.enabled = list.currentIndex > 0
                             }
                         }
                     }
+                    highlight: Rectangle { color: "steelblue" }
+                    highlightMoveVelocity: 9999999
+
+                    onCountChanged: deleteFeedBtn.enabled = list.currentIndex > 0
+                    ScrollBar {
+                        flickable: list
+                        vertical: true
+                    }
+                }
+            }
+
+            ColumnLayout {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                Rectangle {
+                    color: "#add3d4"
+                    radius: 4
+                    Layout.minimumHeight: 40
+                    Layout.fillWidth: true
+                    Text {
+                        id: selectedFeedName
+                        anchors.centerIn: parent
+                    }
                 }
 
-                BusyIndicator {
-                    id: fetchingRecorsIndicator
-                    anchors.fill: parent
-                    visible: false
+                Rectangle {
+                    color: "#add3d4"
+                    radius: 4
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    ListView {
+                        id: rssList
+                        anchors {
+                            fill: parent
+                            margins: 5
+                        }
+                        clip: true
+
+                        model: rssManager.rssRecords
+                        delegate: RssRecordsDelegate {
+                            onLaunchDownloading: {
+                                if(rssList.currentIndex > -1)
+                                {
+                                    downloader.addRecordForDownloading(rssManager.rssAt(rssList.currentIndex))
+                                }
+                            }
+                        }
+                        highlight: Rectangle { color: "steelblue" }
+                        highlightMoveVelocity: 9999999
+
+                        ScrollBar {
+                            flickable: rssList
+                            vertical: true
+                        }
+                    }
+
+                    BusyIndicator {
+                        id: fetchingRecorsIndicator
+                        anchors.fill: parent
+                        visible: false
+                    }
                 }
             }
 
             RowLayout {
                 id: leftBottomPanel
                 height: bottomPanelsHeigh
-                width: 240
+                //width: 240
+                Layout.minimumWidth: 240
                 Button {
                     id: addFeedBtn
 
@@ -158,8 +208,9 @@ Window {
 
             RowLayout {
                 id: rightBottomPanel
-                width: parent.width - list.width
                 height: bottomPanelsHeigh
+                Layout.fillWidth: true
+                Layout.alignment: "AlignRight"
                 Button {
                     id: downloadAllRecords
                     text: "Download all"

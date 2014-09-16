@@ -39,8 +39,10 @@ FocusScope {
 
     ColumnLayout {
         id: content
-        width: parent.width
-        height: parent.height
+        anchors {
+            fill: parent
+            rightMargin: 10
+        }
 
         Item {
             id: commonView
