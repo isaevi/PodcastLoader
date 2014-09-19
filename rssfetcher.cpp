@@ -57,6 +57,8 @@ void RssFetcher::finished()
         emit canceled();
     _currentReply->deleteLater();
     _currentReply = nullptr;
+
+    deleteLater();
 }
 
 void RssFetcher::error(QNetworkReply::NetworkError)
@@ -66,5 +68,7 @@ void RssFetcher::error(QNetworkReply::NetworkError)
     _currentReply->deleteLater();
     _currentReply = nullptr;
     emit canceled();
+
+    deleteLater();
 }
 

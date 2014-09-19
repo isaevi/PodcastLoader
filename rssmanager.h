@@ -21,8 +21,7 @@ enum FetchState
 struct FeedInformation
 {
     QList<RecordInfo*> rssRecords;
-    QAtomicInt state;
-    RssFetcher* fetcher;
+    FetchState state;
 };
 
 typedef QMap<FeedData*, FeedInformation*> FeedsDetails;
@@ -47,9 +46,8 @@ signals:
     //void rssRecordsChanged();
 
 private slots:
-    void finishedEx(QList<RecordInfo *> rss, FeedData *feed);
+    void gotInformationAboutFeedRecords(QList<RecordInfo *> rss, FeedData *feed);
 private:
-    static void appendRecord(QQmlListProperty<RecordInfo> *property, RecordInfo *value);
     static int countRecords(QQmlListProperty<RecordInfo> *property);
     static RecordInfo* recordAt(QQmlListProperty<RecordInfo> *property, int index);
 

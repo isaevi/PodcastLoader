@@ -18,17 +18,6 @@ RecordsManager::RecordsManager(QObject *parent) :
 
 RecordsManager::~RecordsManager()
 {
-//    for(auto record : _finishedRecords)
-//        delete record;
-}
-
-void RecordsManager::addRecordsForDownloading(QVector<RecordInfo *> records)
-{
-    if(_records.isEmpty())
-        _records.swap(records);
-    else
-        std::copy(records.begin(), records.end(), std::back_inserter(_records));
-    hadMoreRecords();
 }
 
 void RecordsManager::addRecordForDownloading(RecordInfo *record)

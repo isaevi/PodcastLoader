@@ -19,7 +19,6 @@ signals:
     void downloadProgress(RecordInfo* rec, qint64 bytesReceived, qint64 bytesTotal);
 
 public slots:
-    void addRecordsForDownloading(QVector<RecordInfo*> records);
     Q_INVOKABLE
     void addRecordForDownloading(RecordInfo* record);
 

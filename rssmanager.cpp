@@ -9,7 +9,7 @@ RssManager::RssManager(QObject *parent) :
 
 QQmlListProperty<RecordInfo> RssManager::rssRecords()
 {
-    return QQmlListProperty<RecordInfo>(this, 0, /*appendRecord*/nullptr, RssManager::countRecords, RssManager::recordAt, nullptr);
+    return QQmlListProperty<RecordInfo>(this, 0, nullptr, RssManager::countRecords, RssManager::recordAt, nullptr);
 }
 
 void RssManager::setActiveFeed(FeedData *feed)
@@ -24,42 +24,30 @@ RecordInfo *RssManager::rssAt(int index)
     return _rssRecords[index];
 }
 
-void RssManager::finishedEx(QList<RecordInfo *> rss, FeedData *feed)
+void RssManager::gotInformationAboutFeedRecords(QList<RecordInfo *> rss, FeedData *feed)
 {
-    //QMutexLocker lock(&_mutex);
-    FeedInformation* details = feedDetails[feed];
-    Q_ASSERT(details);
-    //return QQmlListProperty<FeedData>(this, 0, FeedManager::add, FeedManager::count, FeedManager::at, nullptr);
+    auto details = new FeedInformation();
     details->rssRecords = rss;
     for(auto rec : details->rssRecords)
         rec->setParent(this);
-    details->state.store(Finished);
+    details->state = Finished;
     bool needToSignal = false;
     {
-//        qWarning("finishedEx second in");
         QMutexLocker lock(&_mutex);
-//        qWarning("finishedEx second pass");
-        //_rssRecords = details->rssRecords;
         std::copy(details->rssRecords.begin(), details->rssRecords.end(), std::back_inserter(_rssRecords));
 
+        if(feedDetails.contains(feed))
+            delete feedDetails[feed];
         feedDetails[feed] = details;
 
         _feedsToFetch.removeOne(feed);
         needToSignal = _feedsToFetch.count() == 0;
     }
-    //rssRecordsChanged(details.rssRecords);
-    //emit rssRecordsChanged(RssManager::rssRecords());
     if(needToSignal)
     {
         emit rssRecordsChanged();
         emit endQueringRecords(feed);
     }
-//    qWarning("finishedEx second out");
-}
-
-void RssManager::appendRecord(QQmlListProperty<RecordInfo> *property, RecordInfo *value)
-{
-    //nope
 }
 
 int RssManager::countRecords(QQmlListProperty<RecordInfo> *property)
@@ -67,9 +55,7 @@ int RssManager::countRecords(QQmlListProperty<RecordInfo> *property)
     RssManager *manager = qobject_cast<RssManager *>(property->object);
     if (manager)
     {
-//        qWarning("countRecords in");
         QMutexLocker lock(&(manager->_mutex));
-//        qWarning("countRecords pass");
         return manager->_rssRecords.count();
     }
     return 0;
@@ -80,6 +66,7 @@ RecordInfo *RssManager::recordAt(QQmlListProperty<RecordInfo> *property, int ind
     RssManager *manager = qobject_cast<RssManager *>(property->object);
     if (manager)
     {
+        //The instance of RecordInfo could be modified only at UI where we have only one thread
         return manager->rssAt(index);
     }
     return nullptr;
@@ -90,7 +77,6 @@ void RssManager::resetQueue(QList<FeedData *> feeds)
     emit startQueringRecords();
     QMutexLocker lock(&_mutex);
     _rssRecords.clear();
-    //_feedsToFetch.clear();
     _feedsToFetch = feeds;
 }
 
@@ -99,17 +85,13 @@ void RssManager::addFeedToQueue(FeedData *feed)
     bool needToSignal = false;
     {
         QMutexLocker lock(&_mutex);
-        //ToDo: inspect posibilities to use feedDetails from different threats
         if(feedDetails.contains(feed))
         {
             const FeedInformation* details = feedDetails[feed];
             //ToDo: need to handle changes in settings during fetching
-            if(details && details->state.load() == Finished)
+            if(details && details->state == Finished)
             {
-                //rssRecords = details.rssRecords;
                 {
-                    //QMutexLocker lock(&_mutex);
-                    //_rssRecords = rssRecords;
                     _rssRecords = details->rssRecords;
                     _feedsToFetch.removeOne(feed);
                     needToSignal = _feedsToFetch.count() == 0;
@@ -118,20 +100,16 @@ void RssManager::addFeedToQueue(FeedData *feed)
         }
         else
         {
-            FeedInformation* info = new FeedInformation();
-            info->state.store(Fetching);
-            info->fetcher = new RssFetcher(feed);
+            auto info = new FeedInformation();
+            info->state = Fetching;
+            auto fetcher = new RssFetcher(feed);
             feedDetails.insert(feed, info);
-            connect(info->fetcher, SIGNAL(finished(QList<RecordInfo*>, FeedData*)), this, SLOT(finishedEx(QList<RecordInfo*>, FeedData*)));
-            info->fetcher->Fetch(feed->url());
+            connect(fetcher, SIGNAL(finished(QList<RecordInfo*>, FeedData*)), this, SLOT(gotInformationAboutFeedRecords(QList<RecordInfo*>, FeedData*)));
+            fetcher->Fetch(feed->url());
         }
-//        qWarning("setActiveFeed out");
     }
     if(needToSignal)
     {
-//        qWarning("setActiveFeed call to signal");
-        //rssRecordsChanged(rssRecords);
-        //emit rssRecordsChanged(RssManager::rssRecords());
         emit rssRecordsChanged();
         emit endQueringRecords(feed);
     }
