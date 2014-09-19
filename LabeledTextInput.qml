@@ -6,8 +6,8 @@ FocusScope {
     width: 100
     height: input.height + 12
 
-    property alias text: label.text
-    property alias input: input
+    property alias title: label.text
+    property alias input: input.text
 
     RowLayout  {
         id: row

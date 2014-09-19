@@ -27,7 +27,7 @@ Window {
     Desaturate {
         id: colorize
         source: ShaderEffectSource {
-            sourceItem: mainFrame
+            sourceItem: grid
             hideSource: blurEffect.visible;
         }
         desaturation: 0
@@ -55,8 +55,9 @@ Window {
             id: grid
             columns: 2
             rows: 2
-            width: parent.width
-            height: parent.height
+            anchors.fill: parent
+            anchors.leftMargin: 4
+
 
             Connections {
                 target: rssManager
@@ -100,14 +101,21 @@ Window {
                                 selectedFeedName.text = feed.title
                                 rssManager.setActiveFeed(feed)
 
-                                deleteFeedBtn.enabled = list.currentIndex > 0
+                            }
+                        }
+                        onShowConfigurationFor: {
+                            if(index > -1 && index < list.count)
+                            {
+                                var feed = config.feedAt(index);
+                                feedDetails.initControls(feed)
+                                mainFrame.state = "deactivated";
                             }
                         }
                     }
                     highlight: Rectangle { color: "steelblue" }
                     highlightMoveVelocity: 9999999
 
-                    onCountChanged: deleteFeedBtn.enabled = list.currentIndex > 0
+                    onCountChanged: {}//deleteFeedBtn.enabled = list.currentIndex > 0
                     ScrollBar {
                         flickable: list
                         vertical: true
@@ -185,9 +193,8 @@ Window {
                     text: "Add Feed"
                     Layout.alignment: "AlignRight"
                     onClicked: {
-                        config.addStubFeed()
-                        list.currentIndex = list.count - 1
-                        list.expandedItem = list.currentItem
+                        feedDetails.initControls(null);
+                        mainFrame.state = "deactivated"
                     }
                 }
                 Button {
@@ -199,7 +206,7 @@ Window {
 
                     text: "Remove Feed"
                     Layout.alignment: "AlignLeft"
-                    enabled: list.currentIndex != -1
+                    enabled: list.currentIndex > 0
                     onClicked: {
                         config.removeAt(list.currentIndex)
                     }
@@ -223,13 +230,57 @@ Window {
             }
         }
 
+        Item {
+            id: feedEditor
+            height: parent.height
+            width: 4
+            clip: true
+            Rectangle {
+                anchors.fill: parent
+                color: "white"
+                opacity: 0.9
+                Row {
+                    anchors.fill: parent
+                    spacing: 0
+                    FeedDetails {
+                        id: feedDetails
+                        width: parent.width - 3
+                        height: parent.height
+                        opacity: 1
+
+                        onCanceled: mainFrame.state = ""
+                        onUpdated: mainFrame.state = ""
+                        onRequestedNew: {
+                            config.addFeed(title, url, dir, prefix);
+                            //select new feed in list
+                            list.currentIndex = list.count - 1
+                            mainFrame.state = ""
+                        }
+                    }
+                    Rectangle {
+                        width: 3
+                        height: parent.height
+                        color: "blue"
+//                        Layout.alignment: "AlignRight"
+                        Layout.minimumWidth: 3
+                    }
+                }
+            }
+        }
+
         states: [
             State {
-                when: root.modalMode
+//                when: root.modalMode
                 name: "deactivated"
+
                 PropertyChanges {
-                    target: mainFrame
+                    target: grid
                     enabled: false
+                }
+
+                PropertyChanges {
+                    target: feedEditor
+                    width: 240
                 }
 
                 PropertyChanges {
@@ -248,8 +299,8 @@ Window {
         transitions: [
             Transition {
                 NumberAnimation {
-                    targets: [blurEffect, colorize];
-                    properties: "radius, desaturation";
+                    targets: [blurEffect, colorize, feedEditor, grid];
+                    properties: "radius, desaturation, width, enabled";
                     duration: 200
                 }
             }

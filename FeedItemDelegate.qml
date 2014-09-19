@@ -10,32 +10,18 @@ FocusScope {
 
     signal resetFeed()
     signal selectionChanged(int new_index)
+    signal showConfigurationFor(int index)
     property bool expanded: delegate === ListView.view.expandedItem
 
     MouseArea {
         anchors.fill: delegate
         onClicked: {
-            //delegate.ListView.view.currentIndex = index
             selectionChanged(index)
         }
     }
     property int heightOfVisiblePart : 60
     property int heightOfDetailsPart : 110
     property int buttonsRightMargin : 5
-
-    function initDetails() {
-        feedDetails.titleInput.input.text = title;
-        feedDetails.prefixInput.input.text = prefix;
-        feedDetails.dirInput.input.text =  dir;
-        feedDetails.urlInput.input.text = url;
-    }
-
-    function updateFeed() {
-        title = feedDetails.titleInput.input.text;
-        prefix = feedDetails.prefixInput.input.text;
-        dir = feedDetails.dirInput.input.text;
-        url = feedDetails.urlInput.input.text;
-    }
 
     ColumnLayout {
         id: content
@@ -78,6 +64,7 @@ FocusScope {
 
             Image {
                 id: settingsButton
+                visible: !isAggregateStub
                 height: 20; width: 20
                 source: "img/settings.png"
                 fillMode: Image.PreserveAspectFit
@@ -91,99 +78,12 @@ FocusScope {
                 MouseArea {
                     anchors.fill: settingsButton
                     onClicked: {
-                        if(delegate.ListView.view.expandedItem === delegate)
-                            delegate.ListView.view.expandedItem = null;
-                        else {
-                            delegate.ListView.view.expandedItem = delegate;
-                            delegate.ListView.view.currentIndex = index
-                            selectionChanged()
-                        }
-                        initDetails()
-                    }
-                }
-            }
-        }
-
-        Item {
-            id: detailsView
-            height: heightOfDetailsPart
-            anchors{
-                left: parent.left
-                right: parent.right
-                top: commonView.bottom
-                bottom: parent.bottom; bottomMargin: 2
-            }
-
-            FeedDetails {
-                enabled: false;
-                focus: true
-                //width: parent.width
-                anchors.fill: parent
-                id: feedDetails
-                onApplyClicked: {
-                    if(delegate.ListView.view.expandedItem === delegate)
-                    {
-                        updateFeed()
-                        delegate.ListView.view.expandedItem = null;
-                    }
-                }
-                onCanceled: {
-                    if(delegate.ListView.view.expandedItem === delegate)
-                    {
-                        delegate.ListView.view.expandedItem = null;
-                        resetFeed()
+                        showConfigurationFor(index)
                     }
                 }
             }
         }
     }
-
-    states: [
-        State {
-            name: "expanded"
-            when: delegate.expanded
-
-            PropertyChanges {
-                target: feedDetails
-                enabled: true
-            }
-
-            PropertyChanges {
-                target: settingsButton
-                visible: false
-            }
-
-            PropertyChanges {
-                target: content
-                height: heightOfVisiblePart + heightOfDetailsPart
-            }
-
-            ParentChange {
-                target: content
-                parent: modalContainer
-                x: modalContainer.width/4; y: modalContainer.height/4;
-                width: modalContainer.width/2; height: modalContainer.height/2
-            }
-        }
-    ]
-
-    transitions: [
-        Transition {
-            ParallelAnimation {
-                //PropertyAction { target: delegate; property: 'clip'; value: true }
-                ParentAnimation {
-                    via: modalContainer
-                    NumberAnimation { properties: "x,y, width, height"; duration: 200; easing.type: Easing.InOutCubic }
-                }
-                NumberAnimation {
-                    duration: 150;
-                    properties: "height,width,anchors.rightMargin,anchors.topMargin,opacity"
-                }
-
-                //PropertyAction { target: delegate; property: 'clip'; value: false }
-            }
-        }
-    ]
 
     Rectangle {
         width: delegate.width;
