@@ -114,7 +114,8 @@ void RecordInfo::setDescription(QString arg)
 
 void RecordInfo::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
-    setDownloadPercent(bytesReceived * 100/bytesTotal);
+    if(bytesTotal > 0)
+        setDownloadPercent(bytesReceived * 100/bytesTotal);
 }
 
 void RecordInfo::setDownloadPercent(int arg)

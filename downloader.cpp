@@ -22,23 +22,30 @@ Downloader::~Downloader()
 
 }
 
+void Downloader::get()
+{
+    QNetworkRequest request(_rec->url());
+    if(_reply)
+    {
+        disconnect(_reply, 0, this, 0);
+        disconnect(_reply, 0, _rec, 0);
+        _reply->abort();
+        _reply->deleteLater();
+    }
+    _reply = qApp->networkAccessMenager()->get(request);
+    connect(_reply, SIGNAL(finished()), SLOT(finished()));
+    connect(_reply, SIGNAL(downloadProgress(qint64,qint64)), _rec, SLOT(downloadProgress(qint64,qint64)));
+    connect(_reply, SIGNAL(metaDataChanged()), SLOT(metaDataChanged()));
+    connect(_reply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(error(QNetworkReply::NetworkError)));
+}
+
 bool Downloader::get(RecordInfo* rec)
 {
     if(isBusy())
         return false;
     _rec = rec;
     _isBusy = true;
-    QNetworkRequest request(rec->url());
-    if(_reply)
-    {
-        disconnect(_reply, 0, this, 0);
-        _reply->deleteLater();
-    }
-    _reply = qApp->networkAccessMenager()->get(request);
-    connect(_reply, SIGNAL(finished()), SLOT(finished()));
-    connect(_reply, SIGNAL(downloadProgress(qint64,qint64)), rec, SLOT(downloadProgress(qint64,qint64)));
-
-    connect(_reply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(error(QNetworkReply::NetworkError)));
+    get();
     return true;
 }
 
@@ -77,6 +84,15 @@ void Downloader::finished()
 void Downloader::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
     emit downloadProgress(_rec, bytesReceived, bytesTotal);
+}
+
+void Downloader::metaDataChanged()
+{
+    QUrl redirectionTarget = _reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+    if (redirectionTarget.isValid()) {
+        _rec->setUrl(_reply->url().resolved(redirectionTarget));
+        get();
+    }
 }
 
 void Downloader::error(QNetworkReply::NetworkError error)

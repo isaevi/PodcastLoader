@@ -19,6 +19,7 @@ public:
     void setBusy() {_isBusy = true;}
 
     void PrepareDirectory(QString title);
+    void get();
 signals:
     void downloaded(RecordInfo* rec);
     void errorHappen();
@@ -27,6 +28,7 @@ signals:
 private slots:
     void finished();
     void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+    void metaDataChanged();
     void error(QNetworkReply::NetworkError error);
 
 private:
