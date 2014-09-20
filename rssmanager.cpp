@@ -34,14 +34,17 @@ void RssManager::gotInformationAboutFeedRecords(QList<RecordInfo *> rss, FeedDat
     bool needToSignal = false;
     {
         QMutexLocker lock(&_mutex);
-        std::copy(details->rssRecords.begin(), details->rssRecords.end(), std::back_inserter(_rssRecords));
 
         if(feedDetails.contains(feed))
             delete feedDetails[feed];
         feedDetails[feed] = details;
 
-        _feedsToFetch.removeOne(feed);
-        needToSignal = _feedsToFetch.count() == 0;
+        if(_feedsToFetch.contains(feed))
+        {
+            std::copy(details->rssRecords.begin(), details->rssRecords.end(), std::back_inserter(_rssRecords));
+            _feedsToFetch.removeOne(feed);
+            needToSignal = _feedsToFetch.count() == 0;
+        }
     }
     if(needToSignal)
     {
