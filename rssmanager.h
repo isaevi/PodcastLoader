@@ -45,6 +45,7 @@ signals:
 
 private slots:
     void gotInformationAboutFeedRecords(QList<RecordInfo *> rss, FeedData *feed);
+    void feedUrlWasChange(QUrl arg, FeedData *feed);
 private:
     static int countRecords(QQmlListProperty<RecordInfo> *property);
     static RecordInfo* recordAt(QQmlListProperty<RecordInfo> *property, int index);

@@ -9,7 +9,7 @@ FocusScope {
     clip: true
 
     signal resetFeed()
-    signal selectionChanged(int new_index)
+    signal selectionChanged(int newIndex)
     signal showConfigurationFor(int index)
     property bool expanded: delegate === ListView.view.expandedItem
 

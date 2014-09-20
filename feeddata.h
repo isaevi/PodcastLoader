@@ -42,7 +42,7 @@ public slots:
     void setIsAggregateStub(bool arg);
 
 signals:
-    void urlChanged(QUrl arg);
+    void urlChanged(QUrl arg, FeedData* feed);
     void dirChanged(QString arg);
     void prefixChanged(QString arg);
     void titleChanged(QString arg);

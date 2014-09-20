@@ -53,6 +53,16 @@ void RssManager::gotInformationAboutFeedRecords(QList<RecordInfo *> rss, FeedDat
     }
 }
 
+void RssManager::feedUrlWasChange(QUrl arg, FeedData* feed)
+{
+    Q_UNUSED(arg);
+    //remove feed from cache
+    QMutexLocker lock(&_mutex);
+    FeedInformation* value = feedDetails.take(feed);
+    if(value)
+        delete value;
+}
+
 int RssManager::countRecords(QQmlListProperty<RecordInfo> *property)
 {
     RssManager *manager = qobject_cast<RssManager *>(property->object);
@@ -103,11 +113,14 @@ void RssManager::addFeedToQueue(FeedData *feed)
         }
         else
         {
+            //add callback on changing feed's url for reseting cache
+            connect(feed, SIGNAL(urlChanged(QUrl, FeedData*)), SLOT(feedUrlWasChange(QUrl, FeedData*)));
+
             auto info = new FeedInformation();
             info->state = Fetching;
             auto fetcher = new RssFetcher(feed);
             feedDetails.insert(feed, info);
-            connect(fetcher, SIGNAL(finished(QList<RecordInfo*>, FeedData*)), this, SLOT(gotInformationAboutFeedRecords(QList<RecordInfo*>, FeedData*)));
+            connect(fetcher, SIGNAL(finished(QList<RecordInfo*>, FeedData*)), SLOT(gotInformationAboutFeedRecords(QList<RecordInfo*>, FeedData*)));
             fetcher->Fetch(feed->url());
         }
     }

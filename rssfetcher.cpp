@@ -24,8 +24,8 @@ void RssFetcher::Fetch(const QUrl &url)
     }
     _currentReply = qApp->networkAccessMenager()->get(request);
     connect(_currentReply, SIGNAL(finished()), SLOT(finished()));
-    connect(_currentReply, SIGNAL(metaDataChanged()), this, SLOT(metaDataChanged()));
-    connect(_currentReply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(error(QNetworkReply::NetworkError)));
+    connect(_currentReply, SIGNAL(metaDataChanged()), SLOT(metaDataChanged()));
+    connect(_currentReply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(error(QNetworkReply::NetworkError)));
 }
 
 void RssFetcher::metaDataChanged()

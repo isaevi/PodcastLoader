@@ -77,7 +77,7 @@ void FeedData::setUrl(QUrl arg)
 {
     if (_url != arg) {
         _url = arg;
-        emit urlChanged(arg);
+        emit urlChanged(arg, this);
     }
 }
 

@@ -9,7 +9,7 @@ Window {
     id: root
     visible: true
 
-    property bool modalMode: list.expandedItem !== null;
+    property bool isUpdateEnabled: true
 
     width: 800
     height: 480
@@ -90,19 +90,20 @@ Window {
                     clip: true
                     model: feedManager.feeds
                     currentIndex: -1
+
+                    onCurrentIndexChanged: {
+                        var index = list.currentIndex
+                        if(index > -1 && index < list.count && isUpdateEnabled)
+                        {
+                            var feed = feedManager.feedAt(index)
+                            selectedFeedName.text = feed.title
+                            rssManager.setActiveFeed(feed)
+                        }
+                    }
+
                     delegate: FeedItemDelegate {
                         onResetFeed: feedManager.resetFeedAt(list.currentIndex)
-                        onSelectionChanged: {
-                            if(new_index > -1 && new_index < list.count)
-                            {
-                                list.currentIndex = new_index
-
-                                var feed = feedManager.feedAt(list.currentIndex)
-                                selectedFeedName.text = feed.title
-                                rssManager.setActiveFeed(feed)
-
-                            }
-                        }
+                        onSelectionChanged: list.currentIndex = newIndex
                         onShowConfigurationFor: {
                             if(index > -1 && index < list.count)
                             {
@@ -208,7 +209,13 @@ Window {
                     Layout.alignment: "AlignLeft"
                     enabled: list.currentIndex > 0
                     onClicked: {
-                        feedManager.removeAt(list.currentIndex)
+                        isUpdateEnabled = false;
+                        var currentIndex = list.currentIndex;
+                        feedManager.removeAt(currentIndex)
+                        if(currentIndex > 1)
+                            --currentIndex;
+                        isUpdateEnabled = true;
+                        list.currentIndex = currentIndex
                     }
                 }
             }
@@ -249,9 +256,19 @@ Window {
                         opacity: 1
 
                         onCanceled: mainFrame.state = ""
-                        onUpdated: mainFrame.state = ""
+                        onUpdated: {
+                            isUpdateEnabled = false
+                            mainFrame.state = "";
+                            //reselect current item for getting actual data from cache
+                            var currentIndex = list.currentIndex;
+                            list.currentIndex = -1;
+                            isUpdateEnabled = true
+                            list.currentIndex = currentIndex;
+                        }
                         onRequestedNew: {
+                            isUpdateEnabled = false
                             feedManager.addFeed(title, url, dir, prefix);
+                            isUpdateEnabled = true
                             //select new feed in list
                             list.currentIndex = list.count - 1
                             mainFrame.state = ""
@@ -261,7 +278,6 @@ Window {
                         width: 3
                         height: parent.height
                         color: "blue"
-//                        Layout.alignment: "AlignRight"
                         Layout.minimumWidth: 3
                     }
                 }
@@ -270,7 +286,6 @@ Window {
 
         states: [
             State {
-//                when: root.modalMode
                 name: "deactivated"
 
                 PropertyChanges {
