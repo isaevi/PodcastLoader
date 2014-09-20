@@ -7,11 +7,11 @@ HEADERS += \
     rssfetcher.h \
     feeddata.h \
     rssapplication.h \
-    recordsmanager.h \
     entrypoint.h \
     feedmanager.h \
     rssmanager.h \
-    helperinterfaces.h
+    helperinterfaces.h \
+    downloadmanager.h
 SOURCES += main.cpp \
     recordinfo.cpp \
     parser.cpp \
@@ -19,10 +19,10 @@ SOURCES += main.cpp \
     rssfetcher.cpp \
     feeddata.cpp \
     rssapplication.cpp \
-    recordsmanager.cpp \
     entrypoint.cpp \
     feedmanager.cpp \
-    rssmanager.cpp
+    rssmanager.cpp \
+    downloadmanager.cpp
 QT += network xml widgets xmlpatterns quick qml
 QMAKE_CXXFLAGS = -std=c++11
 #CONFIG += c++11

@@ -4,7 +4,7 @@
 #include <QObject>
 #include "feedmanager.h"
 #include "rssmanager.h"
-#include "recordsmanager.h"
+#include "downloadmanager.h"
 
 class QQmlEngine;
 
@@ -18,9 +18,9 @@ public:
     void registerObjectsInEngine();
 private:
     QQmlEngine* _engine;
-    FeedManager config;
+    FeedManager feedManager;
     RssManager rssManager;
-    RecordsManager recordsManager;
+    DownloadManager downloadManager;
 };
 
 #endif // ENTRYPOINT_H

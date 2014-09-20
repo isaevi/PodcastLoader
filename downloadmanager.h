@@ -8,12 +8,12 @@
 #include "downloader.h"
 #include "feeddata.h"
 
-class RecordsManager : public QObject
+class DownloadManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit RecordsManager(QObject *parent = 0);
-    ~RecordsManager();
+    explicit DownloadManager(QObject *parent = 0);
+    ~DownloadManager();
 signals:
     void recordFinished(RecordInfo* record);
     void downloadProgress(RecordInfo* rec, qint64 bytesReceived, qint64 bytesTotal);

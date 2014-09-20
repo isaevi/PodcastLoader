@@ -39,11 +39,9 @@ public:
     Q_INVOKABLE
     RecordInfo* rssAt(int index);
 signals:
-    //void rssRecordsChanged(QQmlListProperty<RecordInfo> arg);
     void rssRecordsChanged();
     void startQueringRecords();
     void endQueringRecords(FeedData *forFeed);
-    //void rssRecordsChanged();
 
 private slots:
     void gotInformationAboutFeedRecords(QList<RecordInfo *> rss, FeedData *feed);

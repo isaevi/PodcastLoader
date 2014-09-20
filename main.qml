@@ -88,16 +88,16 @@ Window {
                     interactive: expandedItem === null;
 
                     clip: true
-                    model: config.feeds
+                    model: feedManager.feeds
                     currentIndex: -1
                     delegate: FeedItemDelegate {
-                        onResetFeed: config.resetFeedAt(list.currentIndex)
+                        onResetFeed: feedManager.resetFeedAt(list.currentIndex)
                         onSelectionChanged: {
                             if(new_index > -1 && new_index < list.count)
                             {
                                 list.currentIndex = new_index
 
-                                var feed = config.feedAt(list.currentIndex)
+                                var feed = feedManager.feedAt(list.currentIndex)
                                 selectedFeedName.text = feed.title
                                 rssManager.setActiveFeed(feed)
 
@@ -106,7 +106,7 @@ Window {
                         onShowConfigurationFor: {
                             if(index > -1 && index < list.count)
                             {
-                                var feed = config.feedAt(index);
+                                var feed = feedManager.feedAt(index);
                                 feedDetails.initControls(feed)
                                 mainFrame.state = "deactivated";
                             }
@@ -208,7 +208,7 @@ Window {
                     Layout.alignment: "AlignLeft"
                     enabled: list.currentIndex > 0
                     onClicked: {
-                        config.removeAt(list.currentIndex)
+                        feedManager.removeAt(list.currentIndex)
                     }
                 }
             }
@@ -251,7 +251,7 @@ Window {
                         onCanceled: mainFrame.state = ""
                         onUpdated: mainFrame.state = ""
                         onRequestedNew: {
-                            config.addFeed(title, url, dir, prefix);
+                            feedManager.addFeed(title, url, dir, prefix);
                             //select new feed in list
                             list.currentIndex = list.count - 1
                             mainFrame.state = ""

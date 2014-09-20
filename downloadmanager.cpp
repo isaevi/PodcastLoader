@@ -1,8 +1,8 @@
 #include <QDebug>
 
-#include "recordsmanager.h"
+#include "downloadmanager.h"
 
-RecordsManager::RecordsManager(QObject *parent) :
+DownloadManager::DownloadManager(QObject *parent) :
     QObject(parent)
 {
     _loaders = QVector<Downloader*>();
@@ -16,17 +16,17 @@ RecordsManager::RecordsManager(QObject *parent) :
     _stub.setBusy();
 }
 
-RecordsManager::~RecordsManager()
+DownloadManager::~DownloadManager()
 {
 }
 
-void RecordsManager::addRecordForDownloading(RecordInfo *record)
+void DownloadManager::addRecordForDownloading(RecordInfo *record)
 {
     _records.push_back(record);
     hadMoreRecords();
 }
 
-void RecordsManager::downloaded(RecordInfo *rec)
+void DownloadManager::downloaded(RecordInfo *rec)
 {
     int index = _queuedRecords.indexOf(rec);
     if(index == -1)
@@ -41,7 +41,7 @@ void RecordsManager::downloaded(RecordInfo *rec)
         hadMoreRecords();
 }
 
-void RecordsManager::hadMoreRecords()
+void DownloadManager::hadMoreRecords()
 {
     int queuedCount = _queuedRecords.size();
     if(queuedCount < PoolSize)
@@ -65,7 +65,7 @@ void RecordsManager::hadMoreRecords()
     }
 }
 
-Downloader* RecordsManager::findFirstFreeDownloader()
+Downloader* DownloadManager::findFirstFreeDownloader()
 {
     for(auto loader : _loaders)
     {

@@ -10,7 +10,7 @@ EntryPoint::EntryPoint() : QObject(), _engine(nullptr)
 
 EntryPoint::~EntryPoint()
 {
-    config.save();
+    feedManager.save();
 }
 
 void EntryPoint::setEngine(QQmlEngine* engine)
@@ -22,11 +22,11 @@ void EntryPoint::registerObjectsInEngine()
 {
     qmlRegisterType<FeedData>("com.podcaster.data", 1, 0, "FeedData");
     qmlRegisterType<RecordInfo>("com.podcaster.data", 1, 0, "RecordInfo");
-    config.load();
+    feedManager.load();
     if(_engine != nullptr)
     {
-        _engine->rootContext()->setContextProperty("config", &config);
+        _engine->rootContext()->setContextProperty("feedManager", &feedManager);
         _engine->rootContext()->setContextProperty("rssManager", &rssManager);
-        _engine->rootContext()->setContextProperty("downloader", &recordsManager);
+        _engine->rootContext()->setContextProperty("downloader", &downloadManager);
     }
 }
