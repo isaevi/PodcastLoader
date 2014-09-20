@@ -19,6 +19,7 @@ void RssFetcher::Fetch(const QUrl &url)
     QNetworkRequest request(url);
     if (_currentReply) {
         _currentReply->disconnect(this);
+        _currentReply->abort();
         _currentReply->deleteLater();
     }
     _currentReply = qApp->networkAccessMenager()->get(request);
@@ -31,7 +32,7 @@ void RssFetcher::metaDataChanged()
 {
     QUrl redirectionTarget = _currentReply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
     if (redirectionTarget.isValid()) {
-        Fetch(redirectionTarget);
+        Fetch(_currentReply->url().resolved(redirectionTarget));
     }
 }
 
