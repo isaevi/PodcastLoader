@@ -2,7 +2,7 @@
 
 #include "recordinfo.h"
 
-RecordInfo::RecordInfo(QObject *parent) : QObject(parent), _downloadPercent(0)
+RecordInfo::RecordInfo(QObject *parent) : QObject(parent), _downloadPercent(0),  _status(Ready)
 {
 
 }
@@ -75,6 +75,11 @@ int RecordInfo::downloadPercent() const
     return _downloadPercent;
 }
 
+RecordInfo::Status RecordInfo::status() const
+{
+    return _status;
+}
+
 int RecordInfo::length() const
 {
     return _length;
@@ -125,5 +130,16 @@ void RecordInfo::setDownloadPercent(int arg)
 
     _downloadPercent = arg;
     emit downloadPercentChanged(arg);
+
+    setStatus(_downloadPercent == 100 ? Downloaded : Downloading);
+}
+
+void RecordInfo::setStatus(Status arg)
+{
+    if (_status == arg)
+        return;
+
+    _status = arg;
+    emit statusChanged(arg);
 }
 

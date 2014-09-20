@@ -10,6 +10,7 @@
 class RecordInfo : public QObject
 {
     Q_OBJECT
+    Q_ENUMS(Status)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(QString guid READ guid WRITE setGuid NOTIFY guidChanged)
@@ -17,17 +18,14 @@ class RecordInfo : public QObject
     Q_PROPERTY(int length READ length WRITE setLength NOTIFY lengthChanged)
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
     Q_PROPERTY(int downloadPercent READ downloadPercent WRITE setDownloadPercent NOTIFY downloadPercentChanged)
-
-FeedData* _feed;
-QString _title;
-QUrl _url;
-QString _guid;
-QDateTime _date;
-int _length;
-QString _description;
-int _downloadPercent;
-
+    Q_PROPERTY(Status status READ status WRITE setStatus NOTIFY statusChanged)
 public:
+    enum Status {
+        Ready,
+        Downloading,
+        Downloaded
+    };
+
     RecordInfo(QObject *parent = nullptr);
     FeedData* getFeed () {return _feed;}
     void setFeed(FeedData* feed) {_feed = feed;}
@@ -40,6 +38,7 @@ public:
     QString description() const;
     void setDate(QString date);
     int downloadPercent() const;
+    Status status() const;
 
 public slots:
     void setTitle(QString arg);
@@ -50,6 +49,7 @@ public slots:
     void setDescription(QString arg);
     void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
     void setDownloadPercent(int arg);
+    void setStatus(Status arg);
 
 signals:
     void titleChanged(QString arg);
@@ -59,6 +59,18 @@ signals:
     void lengthChanged(int arg);
     void descriptionChanged(QString arg);
     void downloadPercentChanged(int arg);
+    void statusChanged(Status arg);
+
+private:
+    FeedData* _feed;
+    QString _title;
+    QUrl _url;
+    QString _guid;
+    QDateTime _date;
+    int _length;
+    QString _description;
+    int _downloadPercent;
+    Status _status;
 };
 
 #endif // RECORDINFO_H

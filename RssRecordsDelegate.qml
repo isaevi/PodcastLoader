@@ -16,7 +16,6 @@ FocusScope {
 
     property int heightOfVisiblePart: 40
     property color textColor : rssRecordsDelegate.ListView.isCurrentItem ? "white" : "black"
-    property bool isDownloaded: downloadPercent == 100 
 
     signal launchDownloading()
 
@@ -68,14 +67,14 @@ FocusScope {
                 Layout.column: 1
                 Layout.fillHeight: true
                 Layout.alignment: "AlignRight"
-                visible: false
 
                 BusyIndicator {
+                    id: progressIndicator
                     anchors.fill: parent
-                    visible: !isDownloaded
+                    visible: status == RecordInfo.Downloading
                 }
                 Text {
-                    text: isDownloaded? "saved" : (downloadPercent === 0? "" : downloadPercent + "%")
+                    text: status == RecordInfo.Downloaded? "saved" : (downloadPercent == 0? "" : downloadPercent + "%")
                     anchors.centerIn: parent
                 }
             }
@@ -88,7 +87,6 @@ FocusScope {
                 Layout.alignment: "AlignRight"
                 Image {
                     id: downloadButton
-                    height: 32; width: 32
                     source: "img/download_media.png"
                     fillMode: Image.PreserveAspectFit
                     anchors{
@@ -100,7 +98,6 @@ FocusScope {
                         anchors.fill: downloadButton
                         onClicked: {
                             rssRecordsDelegate.ListView.view.currentIndex = index
-                            progressInfo.visible = true
                             launchDownloading()
                         }
                     }
