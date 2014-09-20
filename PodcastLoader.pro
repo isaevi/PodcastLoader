@@ -1,4 +1,4 @@
-# CONFIG += console
+CONFIG += console
 
 HEADERS += \
     recordinfo.h \

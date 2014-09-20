@@ -22,17 +22,12 @@ int main(int argc, char **argv)
     entry.setEngine(&engine);
     entry.registerObjectsInEngine();
 
-    //component.loadUrl(QUrl("qrc:/main.qml"));
-    component.loadUrl(QUrl("../PodcastLoader/main.qml"));
+    component.loadUrl(QUrl("qrc:/main.qml"));
+    //component.loadUrl(QUrl("../PodcastLoader/main.qml"));
     if ( component.isReady() )
         component.create();
     else
         qWarning() << component.errorString();
 
     return app.exec();
-//    RssApplication app(argc, argv);
-//    //QQmlApplicationEngine engine("addFeedDialog.qml");
-//    RSSListing *rsslisting = new RSSListing;
-//    rsslisting->show();
-//    return app.exec();
 }
