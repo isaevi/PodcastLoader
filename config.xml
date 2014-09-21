@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Configuration>
+    <Feed url="http://learningenglish.voanews.com/Podcast/?zoneId=1580" title="This Is America" prefix="tia" dir="C:\Podcast1\this is america"/>
+    <Feed url="http://downloads.bbc.co.uk/podcasts/worldservice/how2/rss.xml" title="6 Minutes" prefix="bbc_6m" dir="C:\Podcast1\bbc_6m"/>
+    <Feed url="http://learningenglish.voanews.com/Podcast/?zoneId=986" title="American Mosaic" prefix="am" dir="C:\Podcast1\american mosaic"/>
+</Configuration>
