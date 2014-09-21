@@ -4,7 +4,7 @@
 #include "rssapplication.h"
 
 RssApplication::RssApplication(int &argc, char **argv) :
-    QApplication(argc, argv)
+    QGuiApplication(argc, argv)
 {
     _manager = new QNetworkAccessManager(this);
 //    _engine = new QQmlEngine(this);

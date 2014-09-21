@@ -1,4 +1,3 @@
-#include <QtWidgets>
 #include <QtQuick/QQuickView>
 #include <QtGui/QGuiApplication>
 #include <QtQml/QQmlEngine>

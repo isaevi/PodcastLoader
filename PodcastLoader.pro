@@ -23,13 +23,9 @@ SOURCES += main.cpp \
     feedmanager.cpp \
     rssmanager.cpp \
     downloadmanager.cpp
-QT += network xml widgets xmlpatterns quick qml
+QT += network xml xmlpatterns quick qml
 QMAKE_CXXFLAGS = -std=c++11
 #CONFIG += c++11
-
-# install
-target.path = $$[QT_INSTALL_EXAMPLES]/xml/rsslisting
-INSTALLS += target
 
 FORMS +=
 

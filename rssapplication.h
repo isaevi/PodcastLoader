@@ -1,7 +1,7 @@
 #ifndef RSSAPPLICATION_H
 #define RSSAPPLICATION_H
 
-#include <QApplication>
+#include <QGuiApplication>
 
 class QNetworkAccessManager;
 class QQmlEngine;
@@ -10,9 +10,9 @@ class RssApplication;
 #if defined(qApp)
 #undef qApp
 #endif
-#define qApp (static_cast<RssApplication*>(QApplication::instance()))
+#define qApp (static_cast<RssApplication*>(QGuiApplication::instance()))
 
-class RssApplication : public QApplication
+class RssApplication : public QGuiApplication
 {
     Q_OBJECT
 public:
