@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.3
 import com.podcaster.data 1.0
 import QtQuick.Layouts 1.1
 

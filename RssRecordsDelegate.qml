@@ -1,6 +1,6 @@
-import QtQuick 2.0
+import QtQuick 2.3
 import QtQuick.Window 2.0
-import QtQuick.Controls 1.1
+import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
 import com.podcaster.data 1.0
@@ -145,4 +145,5 @@ FocusScope {
         color: "white"
         visible: rssRecordsDelegate.ListView.isCurrentItem ? false : true
     }
+
 }

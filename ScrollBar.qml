@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.3
 // stolen from https://projects.forum.nokia.com/qmluiexamples/browser/qml/qmluiexamples/Scrollable/ScrollBar.qml
 Rectangle {
     // The flickable to which the scrollbar is attached to, must be set
