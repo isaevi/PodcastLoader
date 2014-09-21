@@ -19,10 +19,11 @@ public:
     RssFetcher(FeedData *feed);
     void Fetch(const QUrl& url);
 
-public slots:
+private slots:
     void metaDataChanged();
     void error(QNetworkReply::NetworkError);
     void finished();
+    void appAboutToQuit();
 
 signals:
     void finished(QList<RecordInfo*> records, FeedData *feed);

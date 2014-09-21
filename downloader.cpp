@@ -27,12 +27,14 @@ void Downloader::get()
     QNetworkRequest request(_rec->url());
     if(_reply)
     {
-        disconnect(_reply, 0, this, 0);
-        disconnect(_reply, 0, _rec, 0);
+        disconnect(_reply, 0, 0, 0);
         _reply->abort();
         _reply->deleteLater();
     }
     _reply = qApp->networkAccessMenager()->get(request);
+
+    connect(qApp, SIGNAL(aboutToQuit()), SLOT(appAboutToQuit()));
+
     connect(_reply, SIGNAL(finished()), SLOT(finished()));
     connect(_reply, SIGNAL(downloadProgress(qint64,qint64)), _rec, SLOT(downloadProgress(qint64,qint64)));
     connect(_reply, SIGNAL(metaDataChanged()), SLOT(metaDataChanged()));
@@ -100,4 +102,14 @@ void Downloader::error(QNetworkReply::NetworkError error)
     qDebug() << "Error #" << error << "\t" << _rec->title();
     _reply->deleteLater();
     _reply = nullptr;
+}
+
+void Downloader::appAboutToQuit()
+{
+    if(_reply)
+    {
+        disconnect(_reply, 0, 0, 0);
+        _reply->abort();
+        _reply->deleteLater();
+    }
 }

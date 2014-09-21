@@ -18,11 +18,14 @@ void RssFetcher::Fetch(const QUrl &url)
 {
     QNetworkRequest request(url);
     if (_currentReply) {
-        _currentReply->disconnect(this);
+        disconnect(_currentReply, 0, 0, 0);
         _currentReply->abort();
         _currentReply->deleteLater();
     }
     _currentReply = qApp->networkAccessMenager()->get(request);
+
+    connect(qApp, SIGNAL(aboutToQuit()), SLOT(appAboutToQuit()));
+
     connect(_currentReply, SIGNAL(finished()), SLOT(finished()));
     connect(_currentReply, SIGNAL(metaDataChanged()), SLOT(metaDataChanged()));
     connect(_currentReply, SIGNAL(error(QNetworkReply::NetworkError)), SLOT(error(QNetworkReply::NetworkError)));
@@ -59,6 +62,16 @@ void RssFetcher::finished()
     _currentReply = nullptr;
 
     deleteLater();
+}
+
+void RssFetcher::appAboutToQuit()
+{
+    if(_currentReply)
+    {
+        disconnect(_currentReply, 0, 0, 0);
+        _currentReply->abort();
+        _currentReply->deleteLater();
+    }
 }
 
 void RssFetcher::error(QNetworkReply::NetworkError)
