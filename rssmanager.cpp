@@ -105,7 +105,7 @@ void RssManager::addFeedToQueue(FeedData *feed)
             if(details && details->state == Finished)
             {
                 {
-                    _rssRecords = details->rssRecords;
+                    std::copy(details->rssRecords.begin(), details->rssRecords.end(), std::back_inserter(_rssRecords));
                     _feedsToFetch.removeOne(feed);
                     needToSignal = _feedsToFetch.count() == 0;
                 }
