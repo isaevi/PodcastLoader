@@ -1,5 +1,3 @@
-CONFIG += console
-
 HEADERS += \
     recordinfo.h \
     parser.h \
