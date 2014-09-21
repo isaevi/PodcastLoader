@@ -35,7 +35,6 @@ OTHER_FILES += \
     img/settings.png \
     RssRecordsDelegate.qml \
     img/download_media.png \
-    BusyIndicator.qml \
     img/busy.png \
     ScrollBar.qml
 

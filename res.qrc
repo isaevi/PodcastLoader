@@ -4,7 +4,6 @@
         <file>LabeledTextInput.qml</file>
         <file>FeedDetails.qml</file>
         <file>FeedItemDelegate.qml</file>
-        <file>BusyIndicator.qml</file>
         <file>RssRecordsDelegate.qml</file>
         <file>ScrollBar.qml</file>
         <file>img/busy.png</file>
