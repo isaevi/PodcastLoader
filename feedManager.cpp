@@ -109,7 +109,6 @@ void FeedManager::save()
     if(!oldConfig.remove())
     {
         qDebug() << "Couldn't remove old configuration.";
-        return;
     }
     if(!file.rename(configName))
         qDebug() << "Couldn't rename configuration.";
