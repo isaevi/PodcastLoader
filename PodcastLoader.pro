@@ -1,4 +1,4 @@
-CONFIG += console
+CONFIG += gui
 
 HEADERS += \
     recordinfo.h \
