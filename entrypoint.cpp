@@ -1,4 +1,4 @@
-#include <QQmlEngine>
+#include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QtQml/QQmlComponent>
 #include "entrypoint.h"
@@ -13,7 +13,7 @@ EntryPoint::~EntryPoint()
     feedManager.save();
 }
 
-void EntryPoint::setEngine(QQmlEngine* engine)
+void EntryPoint::setEngine(QQmlApplicationEngine* engine)
 {
     _engine = engine;
 }

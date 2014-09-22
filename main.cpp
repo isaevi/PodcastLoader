@@ -1,6 +1,6 @@
 #include <QtQuick/QQuickView>
 #include <QtGui/QGuiApplication>
-#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlApplicationEngine>
 #include <QtQml/QQmlComponent>
 #include <QtQuick/QQuickWindow>
 #include <QtCore/QUrl>
@@ -11,22 +11,18 @@
 
 int main(int argc, char **argv)
 {    
-    RssApplication app(argc, argv);
+    EntryPoint entry;
+    QNetworkAccessManager networkManager;
+    RssApplication app(argc, argv, &networkManager);
 
-    QQmlEngine engine;
-    QQmlComponent component(&engine);
+    QQmlApplicationEngine engine;
     QQuickWindow::setDefaultAlphaBuffer(true);
 
-    EntryPoint entry;
     entry.setEngine(&engine);
     entry.registerObjectsInEngine();
 
-    component.loadUrl(QUrl("qrc:/main.qml"));
-    //component.loadUrl(QUrl("../PodcastLoader/main.qml"));
-    if ( component.isReady() )
-        component.create();
-    else
-        qWarning() << component.errorString();
+    engine.load(QUrl("qrc:/main.qml"));
+    //engine.load(QUrl("../PodcastLoader/main.qml"));
 
     return app.exec();
 }

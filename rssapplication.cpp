@@ -3,9 +3,8 @@
 
 #include "rssapplication.h"
 
-RssApplication::RssApplication(int &argc, char **argv) :
+RssApplication::RssApplication(int &argc, char **argv, QNetworkAccessManager *networkManager) :
     QGuiApplication(argc, argv)
 {
-    _manager = new QNetworkAccessManager(this);
-//    _engine = new QQmlEngine(this);
+    _manager = networkManager;
 }

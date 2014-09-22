@@ -16,10 +16,8 @@ class RssApplication : public QGuiApplication
 {
     Q_OBJECT
 public:
-    //explicit RssApplication(QObject *parent = 0);
-    explicit RssApplication(int &argc, char **argv);
+    explicit RssApplication(int &argc, char **argv, QNetworkAccessManager* networkManager);
     QNetworkAccessManager* networkAccessMenager() const {return _manager;}
-    //QQmlEngine* qmlEngine() const {return _engine;}
 signals:
 
 public slots:

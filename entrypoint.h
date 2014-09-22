@@ -6,7 +6,7 @@
 #include "rssmanager.h"
 #include "downloadmanager.h"
 
-class QQmlEngine;
+class QQmlApplicationEngine;
 
 class EntryPoint : public QObject
 {
@@ -14,10 +14,10 @@ class EntryPoint : public QObject
 public:
     EntryPoint();
     ~EntryPoint();
-    void setEngine(QQmlEngine* engine);
+    void setEngine(QQmlApplicationEngine *engine);
     void registerObjectsInEngine();
 private:
-    QQmlEngine* _engine;
+    QQmlApplicationEngine* _engine;
     FeedManager feedManager;
     RssManager rssManager;
     DownloadManager downloadManager;
