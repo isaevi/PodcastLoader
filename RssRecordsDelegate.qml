@@ -68,11 +68,11 @@ FocusScope {
                 Layout.fillHeight: true
                 Layout.alignment: "AlignRight"
 
-//                BusyIndicator {
-//                    id: progressIndicator
-//                    anchors.fill: parent
-//                    visible: status == RecordInfo.Downloading
-//                }
+                BusyIndicator {
+                    id: progressIndicator
+                    anchors.fill: parent
+                    visible: status == RecordInfo.Downloading
+                }
                 Text {
                     text: status == RecordInfo.Downloaded? "saved" : (downloadPercent == 0? "" : downloadPercent + "%")
                     anchors.centerIn: parent

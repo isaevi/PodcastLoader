@@ -22,7 +22,7 @@ Window {
     function showBusyIndicator(show){
         rssList.visible = !show;
         fetchingRecorsIndicator.visible = show;
-//        fetchingRecorsIndicator.running = show
+        fetchingRecorsIndicator.running = show
     }
 
     Desaturate {
@@ -172,21 +172,11 @@ Window {
                         }
                     }
 
-//                    BusyIndicator {
-//                        id: fetchingRecorsIndicator
-//                        anchors.fill: parent
-//                        running: false
-//                        visible: false
-//                    }
-                    Text {
+                    BusyIndicator {
                         id: fetchingRecorsIndicator
-                        anchors.centerIn: parent
+                        anchors.fill: parent
+                        running: false
                         visible: false
-                        text: "Loading..."
-                        font {
-                            bold: true
-                            pointSize: 24
-                        }
                     }
                 }
             }
