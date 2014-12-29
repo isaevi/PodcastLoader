@@ -11,6 +11,7 @@
 
 int main(int argc, char **argv)
 {    
+    QCoreApplication::addLibraryPath("plugins");
     EntryPoint entry;
     QNetworkAccessManager networkManager;
     RssApplication app(argc, argv, &networkManager);
